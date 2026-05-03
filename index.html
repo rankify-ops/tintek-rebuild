@@ -61,8 +61,23 @@ img{max-width:100%;display:block}
 .nav-ph .ph-ic{width:30px;height:30px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:.85rem}
 .nav-cta{background:var(--blue);color:#fff;padding:10px 20px;border-radius:6px;font-weight:700;font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;transition:all .2s;border:none;cursor:pointer;box-shadow:0 4px 12px rgba(9,89,152,.3);white-space:nowrap}
 .nav-cta:hover{background:var(--blue-dark);transform:translateY(-1px);box-shadow:0 6px 18px rgba(9,89,152,.45)}
-.mob-tog{display:none;background:none;border:none;cursor:pointer;padding:6px}
-.mob-tog span{display:block;width:22px;height:2px;background:var(--blue-dark);margin:5px 0;border-radius:2px}
+.mob-tog{display:none;background:none;border:none;cursor:pointer;padding:6px;z-index:200;position:relative}
+.mob-tog span{display:block;width:22px;height:2px;background:var(--blue-dark);margin:5px 0;border-radius:2px;transition:transform .3s,opacity .3s}
+.mob-tog.open span:nth-child(1){transform:translateY(7px) rotate(45deg);background:#fff}
+.mob-tog.open span:nth-child(2){opacity:0}
+.mob-tog.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);background:#fff}
+
+/* Mobile Drawer */
+.mdrawer{position:fixed;inset:0;z-index:150;background:rgba(11,46,96,.92);backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5);display:flex;flex-direction:column;padding:80px 28px 32px;opacity:0;visibility:hidden;transform:translateY(-12px);transition:all .3s ease;overflow-y:auto}
+.mdrawer.open{opacity:1;visibility:visible;transform:translateY(0)}
+.mdrawer-list{list-style:none;display:flex;flex-direction:column;gap:4px;margin-bottom:28px}
+.mdrawer-list a{display:block;padding:14px 16px;font-size:1rem;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.6px;border-radius:10px;transition:all .2s}
+.mdrawer-list a:hover,.mdrawer-list a:active{background:rgba(255,255,255,.1)}
+.mdrawer-list .sublink{padding-left:28px;font-size:.85rem;font-weight:500;color:rgba(255,255,255,.75);text-transform:none;letter-spacing:0}
+.mdrawer-cta{display:flex;flex-direction:column;gap:10px;margin-top:auto}
+.mdrawer-cta a{display:flex;align-items:center;justify-content:center;gap:8px;padding:16px;border-radius:50px;font-weight:700;font-size:.92rem;text-transform:uppercase;letter-spacing:.5px}
+.mdrawer-cta .mc-call{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#fff}
+.mdrawer-cta .mc-quote{background:var(--blue);color:#fff;box-shadow:0 4px 16px rgba(9,89,152,.4)}
 
 /* HERO */
 .hero{padding:0;position:relative;overflow:hidden;display:flex;align-items:center;min-height:680px}
@@ -246,9 +261,12 @@ img{max-width:100%;display:block}
 .fc-item .fc-l{font-size:.7rem;color:var(--g500);text-transform:uppercase;letter-spacing:.8px;font-weight:600}
 .fc-item .fc-v{font-size:.92rem;color:var(--blue-dark);font-weight:700}
 
-.qform{background:#fff;border:1px solid var(--g100);border-radius:var(--r);padding:36px;box-shadow:var(--shadow-xl);position:relative;overflow:hidden}
+.qform{background:#fff;border:1px solid var(--g100);border-radius:var(--r);padding:32px;box-shadow:var(--shadow-xl);position:relative;overflow:hidden;scroll-margin-top:80px}
 .qform::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,var(--blue),var(--blue-mid))}
-.fsteps{display:flex;gap:6px;margin-bottom:28px;margin-top:8px}
+.qform-head{margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--g100)}
+.qform-tag{display:inline-block;background:var(--blue-light);color:var(--blue);padding:5px 12px;border-radius:50px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.qform-title{font-size:1.3rem;color:var(--blue-dark);margin:0;font-family:'Poppins',sans-serif}
+.fsteps{display:flex;gap:6px;margin-bottom:24px;margin-top:4px}
 .fstep{flex:1;height:4px;background:var(--g100);border-radius:3px;transition:background .4s}
 .fstep.active{background:var(--blue)}
 .fstep.done{background:var(--green)}
@@ -301,10 +319,10 @@ img{max-width:100%;display:block}
 .foot-b a{color:var(--accent)}
 
 /* STICKY MOBILE */
-.sticky{position:fixed;bottom:0;left:0;right:0;z-index:99;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--g200);padding:10px 14px;display:none;gap:10px;box-shadow:0 -4px 20px rgba(0,0,0,.08)}
-.sticky a{flex:1;text-align:center;padding:13px;border-radius:8px;font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.5px}
-.sticky .sc{background:#fff;border:2px solid var(--blue);color:var(--blue)}
-.sticky .sq{background:var(--accent);color:#fff}
+.sticky{position:fixed;bottom:14px;left:14px;right:14px;z-index:99;background:rgba(255,255,255,.55);backdrop-filter:blur(24px) saturate(1.6);-webkit-backdrop-filter:blur(24px) saturate(1.6);border:1px solid rgba(255,255,255,.5);padding:10px;display:none;gap:10px;box-shadow:0 8px 32px rgba(11,46,96,.18);border-radius:50px}
+.sticky a{flex:1 1 0;text-align:center;padding:13px 16px;border-radius:50px;font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:6px}
+.sticky .sc{background:rgba(255,255,255,.85);border:1px solid rgba(9,89,152,.2);color:var(--blue)}
+.sticky .sq{background:var(--blue);color:#fff;box-shadow:0 4px 14px rgba(9,89,152,.35)}
 
 /* FADE */
 .fade{opacity:0;transform:translateY(20px);transition:all .6s cubic-bezier(.16,1,.3,1)}
@@ -332,13 +350,14 @@ img{max-width:100%;display:block}
   .nav-ph .ph-ic{display:none}
 }
 @media(max-width:900px){
-  .topbar{position:static;background:var(--blue-dark)}
-  .nav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--g100)}
-  .nav .logo img{filter:none}
-  .nav .nav-l>li>a{color:var(--blue-dark)}
-  .nav .nav-ph{color:var(--blue-dark)}
-  .nav .nav-ph .ph-ic{background:var(--blue-light);color:var(--blue);border-color:transparent}
-  .hero-inner{padding:60px 0 80px}
+  .topbar{position:absolute;background:rgba(11,46,96,.45);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4)}
+  .nav{position:absolute;background:rgba(255,255,255,.08);backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5);border-bottom:1px solid rgba(255,255,255,.1)}
+  .nav .logo img{filter:brightness(0) invert(1)}
+  .nav.scrolled{background:rgba(255,255,255,.85);backdrop-filter:blur(20px) saturate(1.5);-webkit-backdrop-filter:blur(20px) saturate(1.5)}
+  .nav.scrolled .logo img{filter:none}
+  .mob-tog span{background:#fff;transition:background .3s}
+  .nav.scrolled .mob-tog span{background:var(--blue-dark)}
+  .hero-inner{padding:140px 0 80px}
   .serv-g{grid-template-columns:repeat(2,1fr)}
   .topbar-l{gap:10px;font-size:.72rem}.topbar-r{display:none}
   .nav-l,.nav-ph{display:none}.mob-tog{display:block}
@@ -421,15 +440,39 @@ img{max-width:100%;display:block}
       </li>
       <li><a href="#areas">Service Areas</a></li>
       <li><a href="#about">About</a></li>
-      <li><a href="#quote">Contact</a></li>
+      <li><a href="#quote-form">Contact</a></li>
     </ul>
     <div class="nav-r">
       <a href="tel:0428219634" class="nav-ph"><span class="ph-ic">📞</span>0428 219 634</a>
-      <a href="#quote" class="nav-cta">Free Quote</a>
-      <button class="mob-tog" aria-label="Menu"><span></span><span></span><span></span></button>
+      <a href="#quote-form" class="nav-cta">Free Quote</a>
+      <button class="mob-tog" id="mobTog" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
   </div>
 </nav>
+
+<!-- Mobile Drawer -->
+<div class="mdrawer" id="mdrawer">
+  <ul class="mdrawer-list">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#" class="sublink">Emergency Roof Repairs</a></li>
+    <li><a href="#" class="sublink">Gutter Guard</a></li>
+    <li><a href="#" class="sublink">Gutters & Downpipes</a></li>
+    <li><a href="#" class="sublink">Re-Roofing & Replacements</a></li>
+    <li><a href="#" class="sublink">Roof Repairs</a></li>
+    <li><a href="#roofing">Roofing</a></li>
+    <li><a href="#" class="sublink">New Roofing</a></li>
+    <li><a href="#" class="sublink">Heritage Roofing</a></li>
+    <li><a href="#" class="sublink">Commercial Roofing</a></li>
+    <li><a href="#">Skylights</a></li>
+    <li><a href="#areas">Service Areas</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#quote-form">Contact</a></li>
+  </ul>
+  <div class="mdrawer-cta">
+    <a href="tel:0428219634" class="mc-call">📞 0428 219 634</a>
+    <a href="#quote-form" class="mc-quote">Get a Free Quote →</a>
+  </div>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -443,7 +486,7 @@ img{max-width:100%;display:block}
         <h1>Gold Coast's <span class="em">premier</span><br>metal roofing specialists</h1>
         <p class="hero-sub">Premium Colorbond roofing, re-roofing, and cladding. Over a decade of hands-on experience, industry-leading warranties, and a no-obligation free quote on every project.</p>
         <div class="hero-btns">
-          <a href="#quote" class="btn-p">Get Your Free Quote →</a>
+          <a href="#quote-form" class="btn-p">Get Your Free Quote →</a>
           <a href="tel:0428219634" class="btn-glass">📞 Call 0428 219 634</a>
         </div>
         <div class="hero-cards">
@@ -647,7 +690,7 @@ img{max-width:100%;display:block}
           <div class="al-item"><div class="al-check">✓</div>Leaking roof repairs</div>
           <div class="al-item"><div class="al-check">✓</div>Gutters & downpipes</div>
         </div>
-        <a href="#quote" class="btn-blue">Get a Free Quote →</a>
+        <a href="#quote-form" class="btn-blue">Get a Free Quote →</a>
       </div>
     </div>
   </div>
@@ -777,7 +820,7 @@ img{max-width:100%;display:block}
       <h3>Ready for a roof that <span class="em">lasts a lifetime?</span></h3>
       <p>Book your obligation-free roof inspection and quote today. We service the entire Gold Coast, Tweed Heads, Brisbane and Northern NSW — usually with a quote in your inbox within 48 hours.</p>
       <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-        <a href="#quote" class="btn-p">Request a Quote →</a>
+        <a href="#quote-form" class="btn-p">Request a Quote →</a>
         <a href="tel:0428219634" class="btn-glass">📞 0428 219 634</a>
       </div>
     </div>
@@ -815,7 +858,11 @@ img{max-width:100%;display:block}
           </div>
         </div>
       </div>
-      <div class="qform fade">
+      <div class="qform fade" id="quote-form">
+        <div class="qform-head">
+          <div class="qform-tag">⚡ Request a Free Quote Below</div>
+          <h3 class="qform-title">Quick 60-Second Quote</h3>
+        </div>
         <div class="fsteps"><div class="fstep active"></div><div class="fstep"></div><div class="fstep"></div><div class="fstep"></div></div>
         <div class="fslide active" data-s="1">
           <h3>What kind of project?</h3><p class="fsub">Pick the option that best describes your needs.</p>
@@ -913,7 +960,7 @@ img{max-width:100%;display:block}
           <li><a href="#about">About</a></li>
           <li><a href="#services">Services</a></li>
           <li><a href="#">FAQ</a></li>
-          <li><a href="#quote">Contact</a></li>
+          <li><a href="#quote-form">Contact</a></li>
         </ul>
       </div>
       <div>
@@ -946,20 +993,76 @@ img{max-width:100%;display:block}
 <!-- STICKY MOBILE -->
 <div class="sticky">
   <a href="tel:0428219634" class="sc">📞 Call Us</a>
-  <a href="#quote" class="sq">Free Quote</a>
+  <a href="#quote-form" class="sq">Free Quote</a>
 </div>
 
 <script>
+// === CONFIG ===
+// Form recipient — change this to whoever should receive quote requests.
+// Uses FormSubmit.co — no signup needed. The first submission triggers an activation email
+// to this address; click the link to confirm and all future submissions arrive automatically.
+var FORM_EMAIL = 'admin@tintek.com.au';
+
+// Nav scroll state
 window.addEventListener('scroll',function(){document.getElementById('nav').classList.toggle('scrolled',scrollY>20)});
+
+// Fade-in observer
 var io=new IntersectionObserver(function(entries){entries.forEach(function(x){if(x.isIntersecting){x.target.classList.add('vis');io.unobserve(x.target)}})},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
 document.querySelectorAll('.fade').forEach(function(el){io.observe(el)});
+
+// Mobile drawer
+var mobTog=document.getElementById('mobTog'),mdrawer=document.getElementById('mdrawer');
+function toggleDrawer(open){var isOpen=open===undefined?!mdrawer.classList.contains('open'):open;mdrawer.classList.toggle('open',isOpen);mobTog.classList.toggle('open',isOpen);document.body.style.overflow=isOpen?'hidden':''}
+mobTog.addEventListener('click',function(){toggleDrawer()});
+mdrawer.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){toggleDrawer(false)})});
+
+// Quote wizard
 var cs=1,fd={};
+var labels={
+  s1:{new:'New Roofing',reroof:'Re-Roofing',repair:'Repairs',other:'Other'},
+  s2:{residential:'Residential',commercial:'Commercial',industrial:'Industrial',heritage:'Heritage'},
+  s3:{emergency:'Emergency',month:'Within a month','3months':'Within 3 months',planning:'Just planning'}
+};
 function sel(b){b.closest('.og').querySelectorAll('.ob').forEach(function(x){x.classList.remove('sel')});b.classList.add('sel');fd['s'+b.closest('.fslide').dataset.s]=b.dataset.v}
 function nxt(){if(cs>=4)return;if(cs<=3&&!document.querySelector('.fslide[data-s="'+cs+'"] .ob.sel'))return;cs++;upd()}
 function prv(){if(cs<=1)return;cs--;upd()}
 function upd(){document.querySelectorAll('.fslide').forEach(function(s){s.classList.remove('active')});document.querySelector('.fslide[data-s="'+cs+'"]').classList.add('active');document.querySelectorAll('.fstep').forEach(function(s,i){s.classList.remove('active','done');if(i+1===cs)s.classList.add('active');if(i+1<cs)s.classList.add('done')})}
-function sub(){var n=document.getElementById('fn').value,p=document.getElementById('fp').value,e=document.getElementById('fe').value,s=document.getElementById('fs').value;if(!n||!p||!e||!s){alert('Please fill in all fields');return}fd.name=n;fd.phone=p;fd.email=e;fd.suburb=s;cs=5;document.querySelectorAll('.fslide').forEach(function(s){s.classList.remove('active')});document.querySelector('.fslide[data-s="5"]').classList.add('active');document.querySelectorAll('.fstep').forEach(function(s){s.classList.remove('active');s.classList.add('done')})}
-document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(ev){var t=document.querySelector(a.getAttribute('href'));if(t){ev.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'})}})});
+
+function sub(){
+  var n=document.getElementById('fn').value.trim(),p=document.getElementById('fp').value.trim(),
+      e=document.getElementById('fe').value.trim(),s=document.getElementById('fs').value.trim();
+  if(!n||!p||!e||!s){alert('Please fill in all fields');return}
+  var btn=event.target;btn.disabled=true;btn.textContent='Sending…';
+
+  var payload={
+    _subject:'New Quote Request from '+n+' ('+s+')',
+    _template:'table',
+    _captcha:'false',
+    Name:n,Phone:p,Email:e,Suburb:s,
+    'Project Type':labels.s1[fd.s1]||fd.s1||'',
+    'Property Type':labels.s2[fd.s2]||fd.s2||'',
+    'Urgency':labels.s3[fd.s3]||fd.s3||'',
+    'Submitted From':'tintek.com.au homepage quote form'
+  };
+
+  fetch('https://formsubmit.co/ajax/'+encodeURIComponent(FORM_EMAIL),{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Accept':'application/json'},
+    body:JSON.stringify(payload)
+  }).then(function(r){return r.json()}).then(function(d){
+    fd.name=n;fd.phone=p;fd.email=e;fd.suburb=s;
+    cs=5;
+    document.querySelectorAll('.fslide').forEach(function(s){s.classList.remove('active')});
+    document.querySelector('.fslide[data-s="5"]').classList.add('active');
+    document.querySelectorAll('.fstep').forEach(function(s){s.classList.remove('active');s.classList.add('done')});
+  }).catch(function(err){
+    btn.disabled=false;btn.textContent='Request My Quote →';
+    alert('Sorry — something went wrong. Please call us on 0428 219 634 or email admin@tintek.com.au.');
+  });
+}
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(ev){var h=a.getAttribute('href');if(h.length<2)return;var t=document.querySelector(h);if(t){ev.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'})}})});
 </script>
 </body>
 </html>
