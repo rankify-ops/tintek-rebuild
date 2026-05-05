@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://tintek.com.au/sitemap.xml
