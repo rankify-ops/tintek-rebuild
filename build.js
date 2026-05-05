@@ -519,6 +519,45 @@ function whyMini() { return `
   </div>
 </section>`; }
 
+function productGrid(p, prods) {
+  const r = root(p.slug);
+  return `
+<section class="sec proc-sec">
+  <div class="ctr">
+    <div class="sec-head">
+      <div class="divider"><span class="sec-tag">${esc(prods.tag||'Product Range')}</span></div>
+      <h2 class="sec-t fade">${esc(prods.title)}</h2>
+      ${prods.sub?`<p class="sec-sub fade">${esc(prods.sub)}</p>`:''}
+    </div>
+    <div class="prodgrid">
+      ${prods.items.map(it=>`
+        <div class="prodcard fade">
+          <div class="prodcard-img"><img src="${r}images/${it.img}" alt="${esc(it.title)}"></div>
+          <h3>${esc(it.title)}</h3>
+          ${it.desc?`<p>${esc(it.desc)}</p>`:''}
+        </div>`).join('')}
+    </div>
+  </div>
+</section>`;
+}
+
+function showcaseGrid(p, items) {
+  const r = root(p.slug);
+  return `
+<section class="sec">
+  <div class="ctr">
+    <div class="sec-head">
+      <div class="divider"><span class="sec-tag">${esc(items.tag||'Inspiration')}</span></div>
+      <h2 class="sec-t fade">${esc(items.title)}</h2>
+      ${items.sub?`<p class="sec-sub fade">${esc(items.sub)}</p>`:''}
+    </div>
+    <div class="showcase-g">
+      ${items.imgs.map((i,idx)=>`<div class="showcase-i fade${idx===0?' big':''}"><img src="${r}images/${i}" alt="Skylight inspiration"></div>`).join('')}
+    </div>
+  </div>
+</section>`;
+}
+
 function relatedServices(p, exclude=[]) {
   const r = root(p.slug);
   const services = [
@@ -608,6 +647,37 @@ function buildServicePage(s) {
     urgency(p,{heading:`Need ${s.shortName.toLowerCase()}? <span class="em">Get a free quote today.</span>`,body:`Free, no-obligation quote within 48 hours. QBCC licensed, fully insured, industry warranties.`}),
     whyMini(),
     s.gallery!==false ? gallery(p) : '',
+    reviewsSection(),
+    s.faqs ? faqSection(s.faqs) : '',
+    relatedServices(p, [s.slug]),
+    quoteForm(p),
+    partners(p),
+    areasSection(p),
+    footer(p),
+  ].join('');
+  return p;
+}
+
+function buildSkylightPage(s) {
+  const p = {
+    slug: s.slug,
+    metaTitle: s.metaTitle,
+    metaDesc: s.metaDesc,
+    h1: s.h1,
+    heroSub: s.heroSub,
+    heroImg: s.heroImg,
+    crumbs: s.crumbs || [],
+    crumbCurrent: s.crumbCurrent || s.h1,
+  };
+  p.bodyHTML = [
+    innerHero(p),
+    trustStrip(),
+    splitSection({tag:'Overview',title:s.overviewTitle,body:s.overviewBody,bullets:s.overviewBullets,img:s.splitImg||s.heroImg||'PRINT__DSC8213_reduced.jpg'},p),
+    s.products ? productGrid(p,s.products) : '',
+    featureGrid({tag:"Why Tintek",title:s.featuresTitle,sub:s.featuresSub,items:s.features}),
+    s.showcase ? showcaseGrid(p,s.showcase) : '',
+    urgency(p,{heading:`Light up your home — <span class="em">free quote today.</span>`,body:`We'll bring samples and lay out your skylight options with a fixed-price quote. Free, no obligation.`}),
+    whyMini(),
     reviewsSection(),
     s.faqs ? faqSection(s.faqs) : '',
     relatedServices(p, [s.slug]),
@@ -979,7 +1049,9 @@ const SKYLIGHT_PAGES = [
     crumbCurrent:'Skylights',
     crumbs:[],
     heroSub:`Brighten up dark rooms with premium Velux and Solatube skylights. Designed for Australian homes, professionally installed by certified roofing tradesmen.`,
-    heroImg:'5-1.webp',
+    heroImg:'The-Block-2021-Wk718741-scaled-1.jpg',
+    splitImg:'1-2.webp',
+    showcase:{tag:'Inspiration',title:'See what natural light can do',sub:'Real installations from kitchens, bathrooms, hallways and living spaces — all transformed with Velux or Solatube.',imgs:['Modern-kitchen-with-skylights.jpg','HGTV-EMHE-kitchen-1-low-res-exp-03-29-2021.jpg','Kitchen-Remodel-with-Solatube-Before-and-After-2-2.jpg','2-2.webp','11.png','12.png','13.png','Screenshot-2025-09-06-155346.png']},
     overviewTitle:'Natural light, professionally installed',
     overviewBody:[`A well-placed skylight transforms a dark hallway, bathroom, or living space — flooding it with free, natural daylight all day long. Done right, it's leak-proof, energy-efficient, and adds real value.`,`Tintek is a certified Velux and Solatube installer, with hundreds of skylight installations across the Gold Coast.`],
     overviewBullets:['Velux fixed & opening skylights','Solatube tubular skylights','Bathroom-rated wet area options','Solar-powered ventilating models','Blinds & remote control available','Lifetime leak-free guarantee'],
@@ -1000,7 +1072,28 @@ const SKYLIGHT_PAGES = [
     crumbCurrent:'Velux',
     crumbs:[['/gold-coast-skylights/','Skylights']],
     heroSub:`Premium Velux skylights — fixed, manual-opening, and solar-powered models. Certified installation, leak-free guarantee.`,
-    heroImg:'5-1.webp',
+    heroImg:'1727096657-899267-influencer-justina-blakeney-4945-skylights-kitchen-1022.avif',
+    splitImg:'Untitled-design-2025-09-06T130256.242.webp',
+    products:{
+      tag:'Velux Range',
+      title:'The full Velux skylight range',
+      sub:`From simple fixed skylights to fully app-controlled solar-powered units — there's a Velux for every room and every budget.`,
+      items:[
+        {img:'ps_1.png',title:'Fixed Skylight',desc:'A non-opening skylight for daylight and sky views.'},
+        {img:'ps_2.png',title:'Manual Opening',desc:'Open by hand to vent steam and stale air.'},
+        {img:'ps_3.png',title:'Solar Opening',desc:'Solar-powered, remote-controlled — no wiring required.'},
+        {img:'ps_4.png',title:'Electric Opening',desc:'Hardwired electric model with rain sensor.'},
+        {img:'ps_5.png',title:'Flat Roof Skylight',desc:'Specifically designed for flat-roof applications.'},
+        {img:'ps_6.png',title:'Sun Tunnel',desc:'A tubular skylight for hallways and small rooms.'},
+        {img:'ps_7.png',title:'Curb Mount',desc:'Curb-mounted system for replacement & retrofit.'},
+        {img:'ps_8.png',title:'Custom Designs',desc:'Skylights configured for unique architectural builds.'},
+      ]
+    },
+    showcase:{
+      tag:'Velux Inspiration',
+      title:'Real Velux installations',
+      imgs:['1727096652-509034-influencer-justina-blakeney-5184-skylights-kitchen-1023-before-8192x5464-1.avif','1727182872-76301-application-venting-3848-skylights-living-room-0621.webp','Modern-kitchen-with-skylights.jpg','2-1.png','3-1.png','4-1.png']
+    },
     overviewTitle:'Velux — the gold standard in skylights',
     overviewBody:[`Velux is the world's leading skylight brand — and for good reason. Engineered in Denmark, built for the harshest climates, and backed by industry-leading warranties.`,`Tintek is a certified Velux installer. We carry the full range and install with proper flashings, sarking, and roof integration.`],
     overviewBullets:['Fixed Velux skylights','Manual-opening Velux','Solar-powered remote-control','Solar-powered blinds','Bathroom-rated options','10-year manufacturer warranty'],
@@ -1020,7 +1113,24 @@ const SKYLIGHT_PAGES = [
     crumbCurrent:'Solatube',
     crumbs:[['/gold-coast-skylights/','Skylights']],
     heroSub:`Solatube tubular skylights — bring daylight into any dark room without the cost or disruption of a full skylight install.`,
-    heroImg:'5-1.webp',
+    heroImg:'HGTV-EMHE-kitchen-1-low-res-exp-03-29-2021.jpg',
+    splitImg:'Kitchen-Remodel-with-Solatube-Before-and-After-2-2.jpg',
+    products:{
+      tag:'Solatube Range',
+      title:'The Solatube product family',
+      sub:'Each Solatube model is engineered for a specific room size and ceiling type — we help you pick the right one.',
+      items:[
+        {img:'Solatube-Daylighting-System.png',title:'Solatube Daylighting',desc:'The original tubular skylight — perfect for hallways, kitchens, and living spaces.'},
+        {img:'Solatube-Heavenly-Intelligent.png',title:'Heavenly Intelligent',desc:'Smart Solatube with daylight + LED + dimming all in one ceiling fixture.'},
+        {img:'Solatube-Econotube.png',title:'Econotube',desc:'Affordable Solatube system — great daylight at a great price.'},
+        {img:'SkyVault-Series2.png',title:'SkyVault Series',desc:`For commercial buildings and large-volume spaces — Solatube's heavy-duty range.`},
+      ]
+    },
+    showcase:{
+      tag:'Real Installations',
+      title:'See Solatube in action',
+      imgs:['HGTV-EMHE-kitchen-1-low-res-exp-03-29-2021.jpg','Kitchen-Remodel-with-Solatube-Before-and-After-2-2.jpg','solar-star-technology-inside.jpg','Modern-kitchen-with-skylights.jpg']
+    },
     overviewTitle:'Daylight in a tube',
     overviewBody:[`Solatubes are tubular skylights — a small dome on the roof captures sunlight, reflects it down a polished tube, and floods a room with natural daylight via a ceiling diffuser.`,`Perfect for hallways, bathrooms, walk-in robes, and any windowless space. Installs in a few hours and costs a fraction of a traditional skylight.`],
     overviewBullets:['10-inch & 14-inch models','Daylight equivalent to a 100W bulb','Installs in 2-3 hours','Optional ventilation kit','Optional electric light kit','Lifetime warranty'],
@@ -1032,6 +1142,10 @@ const SKYLIGHT_PAGES = [
     ]
   },
 ];
+
+const LOCATION_IMAGES = ['22.webp','23.webp','24.webp','25.webp','26.webp','27.webp','gallery-9ee77e48-1-1.jpg','gallery-3c80b64a-2-min-1.webp','gallery-b54b74e4-4-min-1.webp','gallery-b1d2cb41-17-min.webp','gallery-2a7353e5-23-min.webp','gallery-32892cd8-7-min-1.webp'];
+let _locImgIdx = 0;
+const nextLocImg = () => LOCATION_IMAGES[(_locImgIdx++) % LOCATION_IMAGES.length];
 
 const LOCATIONS = [
   {slug:'/locations/gold-coast-roofing-services/',suburb:'Gold Coast',
@@ -1213,7 +1327,11 @@ function buildAbout() {
     splitSection({tag:'Our Story',title:'A decade of doing it right',body:[
       `Tintek Roofing & Cladding was built on a simple idea: do the job properly, charge a fair price, and look after the customer like they're family.`,
       `Over a decade later, we're still doing exactly that — across the Gold Coast, Tweed Heads, Brisbane and Northern NSW. Founded and run by Jacob, our small local team has installed thousands of premium Colorbond roofs and built a 4.8-star Google reputation along the way.`
-    ],bullets:['Family-run, locally owned','Over a decade in business','QBCC licensed & fully insured','4.8★ on Google with 20+ reviews','Master Builder accredited','Approved Velux & Solatube installers'],img:'PRINT__DSC8213_reduced.jpg'},p),
+    ],bullets:['Family-run, locally owned','Over a decade in business','QBCC licensed & fully insured','4.8★ on Google with 20+ reviews','Master Builder accredited','Approved Velux & Solatube installers'],img:'Untitled-design-88.jpg'},p),
+    splitSection({tag:'Our Promise',title:`No shortcuts. No surprises.`,flip:true,body:[
+      `Every roof we install is one we'd be proud to put on our own home. We use premium Colorbond materials, certified flashings, and proper sarking — even on jobs where nobody would ever see what's underneath.`,
+      `Combined with a fixed-price quote up front, that means no nasty surprises during the job and a roof that lasts decades after we're gone.`
+    ],bullets:['Fixed-price quotes','Premium Colorbond materials','Certified flashings & sarking','Workmanship warranty included'],img:'Untitled-design-89.jpg'},p),
     whyMini(),
     processSection(p),
     urgency(p),
@@ -1341,8 +1459,8 @@ function buildBlog() {
 const allPages = [
   ...SERVICE_PAGES.map(buildServicePage),
   ...ROOFING_TYPE_PAGES.map(buildRoofingTypePage),
-  ...SKYLIGHT_PAGES.map(buildServicePage),
-  ...LOCATIONS.map(buildLocationPage),
+  ...SKYLIGHT_PAGES.map(buildSkylightPage),
+  ...LOCATIONS.map(l => buildLocationPage({...l, heroImg: l.heroImg || nextLocImg()})),
   buildServicesIndex(),
   buildRoofingIndex(),
   buildLocationsIndex(),
