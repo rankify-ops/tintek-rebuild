@@ -506,6 +506,40 @@ img{max-width:100%;display:block}
 .prodcard .sarrow span{display:inline-block;transition:transform .25s}
 .prodcard.clickable:hover .sarrow span{transform:translateX(4px)}
 
+/* Product detail hero (image left, content right) */
+.ihero-bg-soft::after{background:linear-gradient(120deg,rgba(11,46,96,.85) 0%,rgba(11,46,96,.65) 50%,rgba(11,46,96,.4) 100%)}
+.prodhero{padding:60px 0 40px;background:#fff}
+.prodhero-g{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.prodhero-img{position:relative;text-align:center;background:linear-gradient(135deg,var(--blue-50) 0%,#fff 100%);border-radius:var(--r);padding:40px 30px;min-height:380px;display:flex;align-items:center;justify-content:center}
+.prodhero-img img{max-width:100%;max-height:480px;object-fit:contain;display:block;margin:0 auto}
+.prodhero-img .warranty-badge{position:absolute;bottom:18px;right:18px;height:90px;width:auto;max-height:90px;background:transparent}
+.prodhero-content h1{font-size:clamp(1.8rem,3.2vw,2.8rem);margin-bottom:14px;color:var(--blue-dark);font-family:'Poppins',sans-serif;line-height:1.1;font-weight:800}
+.prodhero-sub{font-size:1.02rem;color:var(--g600);line-height:1.7;margin-bottom:22px}
+.pf-title{font-size:1.05rem;font-weight:700;color:var(--blue-dark);margin-bottom:12px;margin-top:8px}
+.pf-list{list-style:none;padding:0;margin:0 0 26px}
+.pf-list li{font-size:.92rem;color:var(--g700);line-height:1.7;padding-left:22px;position:relative;margin-bottom:8px}
+.pf-list li::before{content:'•';position:absolute;left:6px;top:0;color:var(--blue);font-weight:700;font-size:1.2rem}
+.prodhero-btns{display:flex;gap:12px;flex-wrap:wrap}
+
+/* Explainer cards (Multiple Control Options / Blinds / Glazing) */
+.explainer-sec{background:var(--blue-50);padding:80px 0}
+.exp-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:36px}
+.exp-card{background:#fff;border:1px solid var(--g100);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;transition:all .3s}
+.exp-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-l)}
+.exp-img{height:240px;background:#e9eef5;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:20px}
+.exp-img img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+.exp-card h3{font-size:1.15rem;font-weight:700;color:var(--blue-dark);font-family:'Poppins',sans-serif;padding:22px 24px 10px}
+.exp-card ul{list-style:none;padding:0 24px 26px;margin:0}
+.exp-card ul li{font-size:.88rem;color:var(--g600);line-height:1.65;padding-left:18px;position:relative;margin-bottom:8px}
+.exp-card ul li::before{content:'•';position:absolute;left:0;top:0;color:var(--blue);font-weight:700}
+@media(max-width:900px){
+  .prodhero-g{grid-template-columns:1fr;gap:36px}
+  .prodhero-img{min-height:280px;padding:30px 20px}
+  .prodhero-img img{max-height:340px}
+  .exp-cards{grid-template-columns:1fr;gap:18px}
+  .exp-img{height:200px}
+}
+
 /* Spec list */
 .specs-g{display:grid;grid-template-columns:repeat(2,1fr);gap:0;max-width:720px;margin:0 auto;border:1px solid var(--g200);border-radius:var(--rs);overflow:hidden;background:#fff}
 .spec-i{padding:18px 22px;display:flex;justify-content:space-between;align-items:center;gap:14px;border-bottom:1px solid var(--g100);border-right:1px solid var(--g100)}

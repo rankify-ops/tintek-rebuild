@@ -32,7 +32,12 @@ const NAV = {
   ],
   skylights: [
     ['/gold-coast-skylights/velux-skylights/', 'Velux Skylights'],
+    ['/gold-coast-skylights/velux-skylights/velux-vs/', '— VELUX VS Manual'],
+    ['/gold-coast-skylights/velux-skylights/velux-vss/', '— VELUX VSS Solar'],
+    ['/gold-coast-skylights/velux-skylights/velux-fs/', '— VELUX FS Fixed'],
     ['/gold-coast-skylights/solatube-skylights/', 'Solatube Skylights'],
+    ['/gold-coast-skylights/solatube-skylights/daylighting-system/', '— Solatube Daylighting'],
+    ['/gold-coast-skylights/solatube-skylights/heavenly-intelligent/', '— Heavenly Intelligent'],
   ],
   locations: [
     ['/locations/gold-coast-roofing-services/', 'Gold Coast'],
@@ -692,6 +697,65 @@ function buildSkylightPage(s) {
   return p;
 }
 
+function productHero(p, s) {
+  const r = root(p.slug);
+  const isVelux = s.parent === 'velux';
+  const brandLogo = isVelux ? `${r}images/Velux_logo.svg` : `${r}images/logo-1.webp`;
+  const brandStyle = isVelux ? 'background:#cf102d;padding:8px 16px;display:inline-block;margin-bottom:16px;border-radius:4px' : 'margin-bottom:16px;display:inline-block';
+  return `
+<section class="ihero ihero-product">
+  <div class="ihero-bg ihero-bg-soft"><img src="${r}images/${s.heroImg||'PRINT__DSC8213_reduced.jpg'}" alt=""></div>
+  <div class="ihero-inner" style="padding:120px 0 40px">
+    <div class="ctr">
+      <nav class="bcrumb">
+        <a href="${r||'/'}">Home</a>${(s.crumbs||[]).map(([u,l])=>` <span>›</span> <a href="${r.replace(/\/$/,'')}${u}">${esc(l)}</a>`).join('')}
+        <span>›</span> <span class="bcrumb-cur">${esc(s.crumbCurrent||s.h1)}</span>
+      </nav>
+    </div>
+  </div>
+</section>
+
+<section class="prodhero">
+  <div class="ctr">
+    <div class="prodhero-g">
+      <div class="prodhero-img fade">
+        <img src="${r}images/${s.productImg||s.heroImg}" alt="${esc(s.h1)}">
+        ${s.warrantyImg?`<img class="warranty-badge" src="${r}images/${s.warrantyImg}" alt="Warranty">`:''}
+      </div>
+      <div class="prodhero-content fade">
+        <span class="brand-mark" style="${brandStyle}"><img src="${brandLogo}" alt="${isVelux?'Velux':'Solatube'}" style="height:28px;display:block${isVelux?';filter:brightness(0) invert(1)':''}"></span>
+        <h1>${esc(s.h1)}</h1>
+        <p class="prodhero-sub">${esc(s.heroSub)}</p>
+        ${s.productFeatures?`<h3 class="pf-title">Product Features</h3><ul class="pf-list">${s.productFeatures.map(f=>`<li>${esc(f)}</li>`).join('')}</ul>`:''}
+        <div class="prodhero-btns">
+          ${s.brochure?`<a href="${s.brochure}" target="_blank" rel="noopener" class="btn-blue">Download Brochure</a>`:''}
+          <a href="${r}contact/#quote-form" class="btn-p">Request a Quote →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>`;
+}
+
+function explainerSection(p, s) {
+  if (!s.explainers) return '';
+  const r = root(p.slug);
+  return `
+<section class="sec explainer-sec">
+  <div class="ctr">
+    ${s.explainerTitle?`<div class="sec-head"><h2 class="sec-t fade" style="font-size:clamp(1.4rem,2.4vw,2rem)">${esc(s.explainerTitle)}</h2></div>`:''}
+    <div class="exp-cards">
+      ${s.explainers.map(e=>`
+        <div class="exp-card fade">
+          <div class="exp-img"><img src="${r}images/${e.img}" alt="${esc(e.title)}"></div>
+          <h3>${esc(e.title)}</h3>
+          <ul>${e.bullets.map(b=>`<li>${esc(b)}</li>`).join('')}</ul>
+        </div>`).join('')}
+    </div>
+  </div>
+</section>`;
+}
+
 function buildProductPage(s) {
   const p = {
     slug:s.slug,
@@ -704,15 +768,13 @@ function buildProductPage(s) {
     crumbCurrent:s.crumbCurrent||s.h1,
   };
   p.bodyHTML = [
-    innerHero(p),
+    productHero(p,s),
     trustStrip(),
-    splitSection({tag:s.tag||'Product Overview',title:s.overviewTitle,body:s.overviewBody,bullets:s.overviewBullets,img:s.splitImg||s.heroImg},p),
-    featureGrid({tag:'Key Features',title:s.featuresTitle,sub:s.featuresSub,items:s.features}),
+    explainerSection(p,s),
     s.specs ? `<section class="sec proc-sec"><div class="ctr">
       <div class="sec-head"><div class="divider"><span class="sec-tag">Specifications</span></div><h2 class="sec-t fade">At a glance</h2></div>
       <div class="specs-g">${s.specs.map(sp=>`<div class="spec-i fade"><span class="spec-k">${esc(sp[0])}</span><span class="spec-v">${esc(sp[1])}</span></div>`).join('')}</div>
     </div></section>` : '',
-    s.showcase ? showcaseGrid(p,s.showcase) : '',
     urgency(p,{heading:`Get a free quote on the <span class="em">${esc(s.h1)}.</span>`,body:`Our certified installers will measure your roof, recommend the right model, and give you a fixed-price quote — free, with no obligation.`}),
     relatedSkylights(p,s.parent,s.slug),
     quoteForm(p),
@@ -727,20 +789,21 @@ function relatedSkylights(p, parent, exclude) {
   const r = root(p.slug);
   const sets = {
     velux: [
-      {url:'/gold-coast-skylights/velux-skylights/fixed/',img:'ps_1.png',title:'Fixed Skylight',desc:'For daylight without ventilation.'},
-      {url:'/gold-coast-skylights/velux-skylights/manual-opening/',img:'ps_2.png',title:'Manual Opening',desc:'Hand-cranked venting.'},
-      {url:'/gold-coast-skylights/velux-skylights/solar-opening/',img:'ps_3.png',title:'Solar Opening',desc:'No wiring required.'},
-      {url:'/gold-coast-skylights/velux-skylights/electric-opening/',img:'ps_4.png',title:'Electric Opening',desc:'Hardwired with rain sensor.'},
-      {url:'/gold-coast-skylights/velux-skylights/flat-roof/',img:'ps_5.png',title:'Flat Roof',desc:'For flat-roof applications.'},
-      {url:'/gold-coast-skylights/velux-skylights/sun-tunnel/',img:'ps_6.png',title:'Sun Tunnel',desc:'Tubular skylight for small rooms.'},
-      {url:'/gold-coast-skylights/velux-skylights/curb-mount/',img:'ps_7.png',title:'Curb Mount',desc:'For replacement & retrofit.'},
-      {url:'/gold-coast-skylights/velux-skylights/custom/',img:'ps_8.png',title:'Custom Designs',desc:'Architectural & specialty builds.'},
+      {url:'/gold-coast-skylights/velux-skylights/velux-vs/',img:'vs-cb_column-1.png',title:'VELUX VS',desc:'Manually operated top-hung skylights.'},
+      {url:'/gold-coast-skylights/velux-skylights/velux-vss/',img:'VSSS062004AE_1600x1600.webp',title:'VELUX VSS',desc:'Solar-powered opening, no wiring.'},
+      {url:'/gold-coast-skylights/velux-skylights/velux-vse/',img:'VSE_955x844.webp',title:'VELUX VSE',desc:'Electric opening with rain sensor.'},
+      {url:'/gold-coast-skylights/velux-skylights/velux-fs/',img:'fixed.jpg',title:'VELUX FS',desc:'Fixed deck-mounted skylight.'},
+      {url:'/gold-coast-skylights/velux-skylights/velux-fcm/',img:'fcm-pitch-940.png',title:'VELUX FCM',desc:'Fixed curb-mount skylight.'},
+      {url:'/gold-coast-skylights/velux-skylights/velux-vcm/',img:'vcm-pitch-940-1.jpg',title:'VELUX VCM',desc:'Manual opening curb-mount.'},
+      {url:'/gold-coast-skylights/velux-skylights/velux-vcs/',img:'vcs-landscape.png',title:'VELUX VCS',desc:'Solar opening curb-mount.'},
+      {url:'/gold-coast-skylights/velux-skylights/velux-ggl-gpl/',img:'vs-cb_column-1.png',title:'VELUX GGL/GPL',desc:'Pivot roof window.'},
     ],
     solatube: [
-      {url:'/gold-coast-skylights/solatube-skylights/daylighting/',img:'Solatube-Daylighting-System.png',title:'Solatube Daylighting',desc:'The original tubular skylight.'},
+      {url:'/gold-coast-skylights/solatube-skylights/daylighting-system/',img:'Solatube-Daylighting-System.png',title:'Solatube Daylighting',desc:'The original tubular skylight.'},
       {url:'/gold-coast-skylights/solatube-skylights/heavenly-intelligent/',img:'Solatube-Heavenly-Intelligent.png',title:'Heavenly Intelligent',desc:'Smart skylight with LED + dimming.'},
-      {url:'/gold-coast-skylights/solatube-skylights/econotube/',img:'Solatube-Econotube.png',title:'Econotube',desc:'Affordable, high-quality daylight.'},
-      {url:'/gold-coast-skylights/solatube-skylights/skyvault/',img:'SkyVault-Series2.png',title:'SkyVault Series',desc:'Heavy-duty commercial skylights.'},
+      {url:'/gold-coast-skylights/solatube-skylights/solatube-econotube/',img:'Solatube-Econotube.png',title:'Solatube Econotube',desc:'Affordable, high-quality daylight.'},
+      {url:'/gold-coast-skylights/solatube-skylights/commercial-solatube/',img:'SkyVault-Series2.png',title:'Commercial Solatube',desc:'Heavy-duty SkyVault for commercial.'},
+      {url:'/gold-coast-skylights/solatube-skylights/solatube-solastar/',img:'solar-star-1_1024x1024.jpg',title:'Solatube SolaStar',desc:'Solar-powered roof exhaust fan.'},
     ]
   };
   const items = (sets[parent]||[]).filter(x => x.url !== exclude);
@@ -1161,17 +1224,17 @@ const SKYLIGHT_PAGES = [
     splitImg:'Untitled-design-2025-09-06T130256.242.webp',
     products:{
       tag:'Velux Range',
-      title:'The full Velux skylight range',
-      sub:`From simple fixed skylights to fully app-controlled solar-powered units — there's a Velux for every room and every budget.`,
+      title:'The full VELUX skylight range',
+      sub:`From manually operated VS skylights to solar-powered VSS units, fixed FS skylights, and curb-mounted FCM/VCM/VCS variants — there's a VELUX for every roof and every room.`,
       items:[
-        {img:'ps_1.png',title:'Fixed Skylight',desc:'A non-opening skylight for daylight and sky views.',link:'/gold-coast-skylights/velux-skylights/fixed/'},
-        {img:'ps_2.png',title:'Manual Opening',desc:'Open by hand to vent steam and stale air.',link:'/gold-coast-skylights/velux-skylights/manual-opening/'},
-        {img:'ps_3.png',title:'Solar Opening',desc:'Solar-powered, remote-controlled — no wiring required.',link:'/gold-coast-skylights/velux-skylights/solar-opening/'},
-        {img:'ps_4.png',title:'Electric Opening',desc:'Hardwired electric model with rain sensor.',link:'/gold-coast-skylights/velux-skylights/electric-opening/'},
-        {img:'ps_5.png',title:'Flat Roof Skylight',desc:'Specifically designed for flat-roof applications.',link:'/gold-coast-skylights/velux-skylights/flat-roof/'},
-        {img:'ps_6.png',title:'Sun Tunnel',desc:'A tubular skylight for hallways and small rooms.',link:'/gold-coast-skylights/velux-skylights/sun-tunnel/'},
-        {img:'ps_7.png',title:'Curb Mount',desc:'Curb-mounted system for replacement & retrofit.',link:'/gold-coast-skylights/velux-skylights/curb-mount/'},
-        {img:'ps_8.png',title:'Custom Designs',desc:'Skylights configured for unique architectural builds.',link:'/gold-coast-skylights/velux-skylights/custom/'},
+        {img:'vs-cb_column-1.png',title:'VELUX VS',desc:'Manually operated top-hung skylight.',link:'/gold-coast-skylights/velux-skylights/velux-vs/'},
+        {img:'VSSS062004AE_1600x1600.webp',title:'VELUX VSS',desc:'Solar-powered opening, no wiring.',link:'/gold-coast-skylights/velux-skylights/velux-vss/'},
+        {img:'VSE_955x844.webp',title:'VELUX VSE',desc:'Electric opening with rain sensor.',link:'/gold-coast-skylights/velux-skylights/velux-vse/'},
+        {img:'fixed.jpg',title:'VELUX FS',desc:'Fixed deck-mounted skylight.',link:'/gold-coast-skylights/velux-skylights/velux-fs/'},
+        {img:'fcm-pitch-940.png',title:'VELUX FCM',desc:'Fixed curb-mount for low-pitch roofs.',link:'/gold-coast-skylights/velux-skylights/velux-fcm/'},
+        {img:'vcm-pitch-940-1.jpg',title:'VELUX VCM',desc:'Manual opening curb-mount.',link:'/gold-coast-skylights/velux-skylights/velux-vcm/'},
+        {img:'vcs-landscape.png',title:'VELUX VCS',desc:'Solar opening curb-mount.',link:'/gold-coast-skylights/velux-skylights/velux-vcs/'},
+        {img:'vs-cb_column-1.png',title:'VELUX GGL/GPL',desc:'Pivot roof window — 180° opening.',link:'/gold-coast-skylights/velux-skylights/velux-ggl-gpl/'},
       ]
     },
     showcase:{
@@ -1205,10 +1268,11 @@ const SKYLIGHT_PAGES = [
       title:'The Solatube product family',
       sub:'Each Solatube model is engineered for a specific room size and ceiling type — we help you pick the right one.',
       items:[
-        {img:'Solatube-Daylighting-System.png',title:'Solatube Daylighting',desc:'The original tubular skylight — perfect for hallways, kitchens, and living spaces.',link:'/gold-coast-skylights/solatube-skylights/daylighting/'},
-        {img:'Solatube-Heavenly-Intelligent.png',title:'Heavenly Intelligent',desc:'Smart Solatube with daylight + LED + dimming all in one ceiling fixture.',link:'/gold-coast-skylights/solatube-skylights/heavenly-intelligent/'},
-        {img:'Solatube-Econotube.png',title:'Econotube',desc:'Affordable Solatube system — great daylight at a great price.',link:'/gold-coast-skylights/solatube-skylights/econotube/'},
-        {img:'SkyVault-Series2.png',title:'SkyVault Series',desc:`For commercial buildings and large-volume spaces — Solatube's heavy-duty range.`,link:'/gold-coast-skylights/solatube-skylights/skyvault/'},
+        {img:'Solatube-Daylighting-System.png',title:'Solatube Daylighting',desc:'The original tubular skylight — for hallways, kitchens & living spaces.',link:'/gold-coast-skylights/solatube-skylights/daylighting-system/'},
+        {img:'Solatube-Heavenly-Intelligent.png',title:'Heavenly Intelligent',desc:'Smart skylight with daylight + LED + dimming all in one fixture.',link:'/gold-coast-skylights/solatube-skylights/heavenly-intelligent/'},
+        {img:'Solatube-Econotube.png',title:'Solatube Econotube',desc:'Affordable Solatube system — great daylight at a great price.',link:'/gold-coast-skylights/solatube-skylights/solatube-econotube/'},
+        {img:'SkyVault-Series2.png',title:'Commercial Solatube',desc:`SkyVault for warehouses, schools, and large commercial spaces.`,link:'/gold-coast-skylights/solatube-skylights/commercial-solatube/'},
+        {img:'solar-star-1_1024x1024.jpg',title:'Solatube SolaStar',desc:`Solar-powered roof exhaust fan — cool your home from the roof.`,link:'/gold-coast-skylights/solatube-skylights/solatube-solastar/'},
       ]
     },
     showcase:{
@@ -1235,7 +1299,14 @@ const nextLocImg = () => LOCATION_IMAGES[(_locImgIdx++) % LOCATION_IMAGES.length
 const VELUX_CRUMBS = [['/gold-coast-skylights/','Skylights'],['/gold-coast-skylights/velux-skylights/','Velux']];
 const SOLATUBE_CRUMBS = [['/gold-coast-skylights/','Skylights'],['/gold-coast-skylights/solatube-skylights/','Solatube']];
 
-const VELUX_PRODUCTS = [
+const VELUX_EXPLAINERS = [
+  {img:'multiple_option.png',title:'Multiple Control Options',bullets:['Window handle for operating skylights within easy reach.','Telescopic rod for out-of-reach skylights, 145cm long and extendable up to 285cm.','Short control rod measuring 60cm in length.']},
+  {img:'solarblindremoteshot470x470.jpg',title:'Solar-Powered Blockout Blinds Available',bullets:['Blocks outside light completely for full control of brightness.','Fully self-contained design with no external components.','Built-in battery pack enables operation both day and night.','Reduces light by up to 100%.','Cuts heat transfer by around 40%.','Operated via a wireless wall-mounted keypad (included).']},
+  {img:'glazing.png',title:'High-Performance Double Glazing',bullets:['Outer layer: 3mm toughened Low-E3 coated Cardinal glass.','Cavity: 9mm sealed Argon gas space for insulation.','Inner layer: 5.36mm clear laminated Cardinal glass with 0.76 PVB interlayer.','NEAT™ coating on the outer pane helps reduce cleaning frequency.','Warm edge technology improves overall energy efficiency.']},
+];
+const VELUX_BROCHURE = 'https://tintek.com.au/wp-content/uploads/2025/09/velux_main_brochure_2025_australia.pdf';
+
+const VELUX_PRODUCTS_OLD = [
   {
     slug:'/gold-coast-skylights/velux-skylights/fixed/',parent:'velux',crumbs:VELUX_CRUMBS,
     metaTitle:'Velux Fixed Skylights Gold Coast | Tintek Roofing',
@@ -1397,7 +1468,7 @@ const VELUX_PRODUCTS = [
   },
 ];
 
-const SOLATUBE_PRODUCTS = [
+const SOLATUBE_PRODUCTS_OLD = [
   {
     slug:'/gold-coast-skylights/solatube-skylights/daylighting/',parent:'solatube',crumbs:SOLATUBE_CRUMBS,
     metaTitle:'Solatube Daylighting System Gold Coast | Tintek',
@@ -1477,6 +1548,201 @@ const SOLATUBE_PRODUCTS = [
     ],
     specs:[['Use cases','Warehouses, schools, retail, gyms'],['Ceiling height','Up to 18m'],['Lumens','Highest in the Solatube range'],['Warranty','10 years commercial']],
     showcase:{tag:'Commercial Installs',title:'SkyVault in commercial spaces',imgs:['solar-star-technology-inside.jpg','Kitchen-Remodel-with-Solatube-Before-and-After-2-2.jpg','HGTV-EMHE-kitchen-1-low-res-exp-03-29-2021.jpg']}
+  },
+];
+
+const VELUX_PRODUCTS = [
+  {
+    slug:'/gold-coast-skylights/velux-skylights/velux-vs/',parent:'velux',crumbs:VELUX_CRUMBS,
+    metaTitle:'VELUX VS Manual Opening Skylight Gold Coast | Tintek',
+    metaDesc:'VELUX VS Manually Opening Skylight — natural light + ventilation. Pre-installed insect screen. 10-year warranty. Gold Coast certified installation.',
+    h1:'VELUX VS',crumbCurrent:'Velux VS',
+    heroSub:`The VS Manually Opening Skylight offers the comfort and energy savings of free daylight and natural ventilation. The pre-installed Insect Screen adds the benefit of keeping mosquitoes and flies out in summer.`,
+    heroImg:'1727096657-899267-influencer-justina-blakeney-4945-skylights-kitchen-1022.avif',
+    productImg:'vs-cb_column-1.png',warrantyImg:'Velux-VS-Warranty.webp',brochure:VELUX_BROCHURE,
+    productFeatures:['White painted interior wood frame and sash.','Outer aluminium cappings (grey).','Operated by winder handle for within-reach use, or by rod for out-of-reach operation (up to 285cm above head height).','Smooth, low-profile design that sits lower in the roof.','Available in 10 different sizes.','High-performance double glazing as standard, with NEAT™ coating to reduce cleaning frequency.'],
+    explainerTitle:'VELUX VS is among Australia’s leading skylight systems, combining premium quality with advanced technology.',
+    explainers:VELUX_EXPLAINERS,
+    specs:[['Pitch range','15°–90°'],['Sizes','10 standard sizes'],['Operation','Manual winder + rod'],['Insect screen','Pre-installed'],['Glazing','Double, NEAT™'],['Warranty','10 years']],
+  },
+  {
+    slug:'/gold-coast-skylights/velux-skylights/velux-vss/',parent:'velux',crumbs:VELUX_CRUMBS,
+    metaTitle:'VELUX VSS Solar Opening Skylight Gold Coast | Tintek',
+    metaDesc:'VELUX VSS solar-powered opening skylight — no wiring, app + remote control, automatic rain sensor.',
+    h1:'VELUX VSS',crumbCurrent:'Velux VSS',
+    heroSub:`The VSS Solar Opening Skylight runs entirely on its built-in solar panel — no wiring required. Push-button remote, app control, and an automatic rain sensor that closes the skylight before water hits the floor.`,
+    heroImg:'1727096652-509034-influencer-justina-blakeney-5184-skylights-kitchen-1023-before-8192x5464-1.avif',
+    productImg:'VSSS062004AE_1600x1600.webp',warrantyImg:'Velux-VS-Warranty.webp',brochure:VELUX_BROCHURE,
+    productFeatures:['Solar-powered — no electrician required.','Built-in solar panel + rechargeable battery for day & night use.','Wireless remote control included.','Velux Active app integration for smartphone control.','Automatic rain sensor closes skylight at first drop.','Compatible with Velux solar-powered blinds.','High-performance NEAT™ coated double glazing.'],
+    explainerTitle:'VELUX VSS — the smart solar-powered opening skylight.',
+    explainers:VELUX_EXPLAINERS,
+    specs:[['Power','Built-in solar panel + battery'],['Control','Remote + Velux app'],['Rain sensor','Standard'],['Glazing','Double, NEAT™'],['Warranty','10 years']],
+  },
+  {
+    slug:'/gold-coast-skylights/velux-skylights/velux-vse/',parent:'velux',crumbs:VELUX_CRUMBS,
+    metaTitle:'VELUX VSE Electric Opening Skylight Gold Coast | Tintek',
+    metaDesc:'VELUX VSE electric opening skylight — hardwired with rain sensor and smart-home integration.',
+    h1:'VELUX VSE',crumbCurrent:'Velux VSE',
+    heroSub:`The VSE Electric Opening Skylight is the hardwired choice for new builds. Mains-powered, app and remote-controlled, with rain sensor and smart-home integration.`,
+    heroImg:'1727182872-76301-application-venting-3848-skylights-living-room-0621.webp',
+    productImg:'VSE_955x844.webp',warrantyImg:'Velux-VS-Warranty.webp',brochure:VELUX_BROCHURE,
+    productFeatures:['Hardwired 240V mains power.','Smooth, fast electric operation.','Wireless remote + Velux app control.','Automatic rain sensor.','Smart-home integration (Velux Active, HomeKit).','Insect screen pre-installed.','High-performance double glazing.'],
+    explainerTitle:'VELUX VSE — hardwired smart skylights for premium new builds.',
+    explainers:VELUX_EXPLAINERS,
+    specs:[['Power','240V hardwired'],['Control','Remote, app, smart-home'],['Rain sensor','Standard'],['Glazing','Double, NEAT™'],['Warranty','10 years']],
+  },
+  {
+    slug:'/gold-coast-skylights/velux-skylights/velux-fs/',parent:'velux',crumbs:VELUX_CRUMBS,
+    metaTitle:'VELUX FS Fixed Skylight Gold Coast | Tintek',
+    metaDesc:'VELUX FS Fixed Skylight — the simplest way to flood a room with daylight.',
+    h1:'VELUX FS',crumbCurrent:'Velux FS',
+    heroSub:`The FS Fixed Skylight is engineered for maximum daylight without venting. Perfect for living rooms, hallways, walk-in robes, and any room where you want a sky view.`,
+    heroImg:'Modern-kitchen-with-skylights.jpg',
+    productImg:'fixed.jpg',warrantyImg:'Velux-VS-Warranty-1-e1748416135589.png',brochure:VELUX_BROCHURE,
+    productFeatures:['White painted interior wood frame and sash.','Outer aluminium cappings (grey).','Smooth, low-profile design.','Available in 10 different sizes.','High-performance double glazing as standard.','NEAT™ coating reduces cleaning frequency.','Pre-flashed kit for a watertight install.'],
+    explainerTitle:'VELUX FS — the simplest way to bring stunning daylight into your home.',
+    explainers:VELUX_EXPLAINERS,
+    specs:[['Pitch range','15°–90°'],['Sizes','10 standard sizes'],['Type','Fixed (non-opening)'],['Glazing','Double, NEAT™'],['Warranty','10 years']],
+  },
+  {
+    slug:'/gold-coast-skylights/velux-skylights/velux-fcm/',parent:'velux',crumbs:VELUX_CRUMBS,
+    metaTitle:'VELUX FCM Fixed Curb Mount Skylight Gold Coast | Tintek',
+    metaDesc:'VELUX FCM Fixed Curb-Mounted Skylight — ideal for low-pitch roofs and replacements.',
+    h1:'VELUX FCM',crumbCurrent:'Velux FCM',
+    heroSub:`The FCM Fixed Curb-Mounted Skylight is engineered for low-pitch roofs (down to 0°) and is the perfect drop-in replacement for old polycarbonate domes.`,
+    heroImg:'Modern-kitchen-with-skylights.jpg',
+    productImg:'fcm-pitch-940.png',warrantyImg:'VELUX-FCM-Ten-Year-Warranty-e1748415011323.webp',brochure:VELUX_BROCHURE,
+    productFeatures:['Designed for 0°–60° roof pitch.','Drop-in replacement for old curb-mounted skylights.','Watertight at low pitch.','Low-E coated double glazing.','Available in 10 sizes.','10-year manufacturer warranty.'],
+    explainerTitle:'VELUX FCM — perfect for low-pitch roofs and skylight replacements.',
+    explainers:VELUX_EXPLAINERS,
+    specs:[['Pitch range','0°–60°'],['Sizes','10 standard sizes'],['Type','Fixed curb-mount'],['Glazing','Double, Low-E'],['Warranty','10 years']],
+  },
+  {
+    slug:'/gold-coast-skylights/velux-skylights/velux-vcm/',parent:'velux',crumbs:VELUX_CRUMBS,
+    metaTitle:'VELUX VCM Manual Curb Mount Skylight Gold Coast | Tintek',
+    metaDesc:'VELUX VCM Manual Opening Curb-Mounted Skylight — daylight + ventilation for low-pitch roofs.',
+    h1:'VELUX VCM',crumbCurrent:'Velux VCM',
+    heroSub:`The VCM Manual Opening Curb-Mounted Skylight combines all the daylight benefits of a fixed skylight with the ability to vent steam, heat, and humidity — designed for low-pitch roofs.`,
+    heroImg:'1727182872-76301-application-venting-3848-skylights-living-room-0621.webp',
+    productImg:'vcm-pitch-940-1.jpg',warrantyImg:'Velux-VS-Warranty-e1748415619821.webp',brochure:VELUX_BROCHURE,
+    productFeatures:['Manual hand-crank operation.','Designed for low-pitch (0°–60°) curb-mounted installations.','Insect screen pre-installed.','Low-E coated double glazing.','10 standard sizes.','10-year manufacturer warranty.'],
+    explainerTitle:'VELUX VCM — manual venting curb-mount for low-pitch roofs.',
+    explainers:VELUX_EXPLAINERS,
+    specs:[['Pitch range','0°–60°'],['Sizes','10 standard sizes'],['Operation','Manual winder + rod'],['Glazing','Double, Low-E'],['Warranty','10 years']],
+  },
+  {
+    slug:'/gold-coast-skylights/velux-skylights/velux-vcs/',parent:'velux',crumbs:VELUX_CRUMBS,
+    metaTitle:'VELUX VCS Solar Curb Mount Skylight Gold Coast | Tintek',
+    metaDesc:'VELUX VCS Solar-Powered Opening Curb-Mounted Skylight — no wiring, rain sensor, app control.',
+    h1:'VELUX VCS',crumbCurrent:'Velux VCS',
+    heroSub:`The VCS Solar-Powered Opening Curb-Mounted Skylight delivers wireless, app-controlled venting on low-pitch roofs.`,
+    heroImg:'1727096652-509034-influencer-justina-blakeney-5184-skylights-kitchen-1023-before-8192x5464-1.avif',
+    productImg:'vcs-landscape.png',warrantyImg:'Velux-VS-Warranty-1-e1748416135589.png',brochure:VELUX_BROCHURE,
+    productFeatures:['Solar-powered — no electrician needed.','Designed for 0°–60° roof pitch.','Wireless remote + Velux app control.','Automatic rain sensor.','Insect screen pre-installed.','10-year manufacturer warranty.'],
+    explainerTitle:'VELUX VCS — solar-powered venting for low-pitch roofs.',
+    explainers:VELUX_EXPLAINERS,
+    specs:[['Pitch range','0°–60°'],['Power','Solar panel + battery'],['Control','Remote + app'],['Rain sensor','Standard'],['Warranty','10 years']],
+  },
+  {
+    slug:'/gold-coast-skylights/velux-skylights/velux-ggl-gpl/',parent:'velux',crumbs:VELUX_CRUMBS,
+    metaTitle:'VELUX GGL/GPL Pivot Roof Window Gold Coast | Tintek',
+    metaDesc:'VELUX GGL & GPL Pivot Roof Windows — architectural roof windows with full pivot opening.',
+    h1:'VELUX GGL / GPL',crumbCurrent:'Velux GGL/GPL',
+    heroSub:`Velux roof windows pivot a full 180° for easy cleaning and maximum airflow. The GGL is centre-pivot, the GPL is top-hung. Both deliver dramatic architectural daylight.`,
+    heroImg:'1727096657-899267-influencer-justina-blakeney-4945-skylights-kitchen-1022.avif',
+    productImg:'vs-cb_column-1.png',warrantyImg:'Velux-VS-Warranty.webp',brochure:VELUX_BROCHURE,
+    productFeatures:['Centre-pivot (GGL) or top-hung (GPL) opening.','Full 180° pivot for easy cleaning.','Manual or solar-powered options.','Pre-installed insect screen.','High-performance NEAT™ double glazing.','10-year manufacturer warranty.'],
+    explainerTitle:'VELUX GGL & GPL — the architectural pivot roof windows.',
+    explainers:VELUX_EXPLAINERS,
+    specs:[['Pitch range','15°–90°'],['Operation','Pivot (180°)'],['Variants','GGL centre-pivot, GPL top-hung'],['Glazing','Double, NEAT™'],['Warranty','10 years']],
+  },
+];
+
+const SOLATUBE_PRODUCTS = [
+  {
+    slug:'/gold-coast-skylights/solatube-skylights/daylighting-system/',parent:'solatube',crumbs:SOLATUBE_CRUMBS,
+    metaTitle:'Solatube Daylighting System Gold Coast | Tintek',
+    metaDesc:'The original Solatube tubular skylight — perfect for hallways, kitchens, and living spaces.',
+    h1:'Solatube Daylighting System',crumbCurrent:'Daylighting System',
+    heroSub:`The original tubular skylight that started it all. Solatube Daylighting brings free, natural sunlight into rooms a regular skylight just can't reach.`,
+    heroImg:'HGTV-EMHE-kitchen-1-low-res-exp-03-29-2021.jpg',
+    productImg:'Solatube-Daylighting-System.png',
+    productFeatures:['Patented Spectralight Infinity tubing — 99.7% reflective.','250mm and 350mm tube diameters.','Flexible tube routes around obstacles.','Half-day installation.','Optional Daylight Dimmer.','Lifetime manufacturer warranty.'],
+    explainerTitle:`Solatube Daylighting — free, natural daylight for rooms a regular skylight can't reach.`,
+    explainers:[
+      {img:'wired-outline-804-sun-hover-rays.png',title:'Bright as Daylight',bullets:['A single 350mm Solatube delivers ~7,000 lumens at noon.','Far brighter than artificial light.','Solar-powered — zero running cost.']},
+      {img:'wired-outline-457-shield-security-hover-pinch.png',title:'Lifetime Warranty',bullets:['The longest warranty in the skylight industry.','Premium components engineered to last.','Backed by Solatube’s global service network.']},
+      {img:'wired-outline-2272-podium-hover-pinch.png',title:'Award-Winning Design',bullets:['Used in over 1.5 million installations worldwide.','Featured on Channel 9 The Block & HGTV.','Industry-leading product engineering.']},
+    ],
+    specs:[['Diameters','250mm and 350mm'],['Reflectivity','99.7% Spectralight'],['Tube length','Up to 6m'],['Installation','Half-day'],['Warranty','Lifetime']],
+  },
+  {
+    slug:'/gold-coast-skylights/solatube-skylights/heavenly-intelligent/',parent:'solatube',crumbs:SOLATUBE_CRUMBS,
+    metaTitle:'Solatube Heavenly Intelligent Gold Coast | Tintek',
+    metaDesc:'Solatube Heavenly Intelligent — daylight + integrated dimmable LED + smart-home control all in one fixture.',
+    h1:'Solatube Heavenly Intelligent',crumbCurrent:'Heavenly Intelligent',
+    heroSub:`Solatube’s flagship smart skylight. Daylight by day, integrated dimming LED by night, all in a single beautifully integrated ceiling fixture.`,
+    heroImg:'Kitchen-Remodel-with-Solatube-Before-and-After-2-2.jpg',
+    productImg:'Solatube-Heavenly-Intelligent.png',
+    productFeatures:['Solatube Daylighting + integrated dimmable LED.','App, remote, and smart-home control.','Auto day/night light transition.','Compatible with Alexa, Google Home, Apple HomeKit.','Available in 250mm and 350mm.','Lifetime warranty + 5-year LED warranty.'],
+    explainerTitle:'Solatube Heavenly Intelligent — 24/7 light from a single beautiful fixture.',
+    explainers:[
+      {img:'wired-outline-804-sun-hover-rays.png',title:'24/7 Light',bullets:['Daylight all day, smart LED all night.','Same fixture, no compromises.','Auto day/night transition built in.']},
+      {img:'wired-outline-20-love-heart-hover-heartbeat.png',title:'Smart Control',bullets:['App-controllable from your phone.','Pair with Alexa, Google Home, HomeKit.','Fully dimmable LED for any mood.']},
+      {img:'wired-outline-2272-podium-hover-pinch.png',title:'Premium Build',bullets:['Premium Solatube tubing + diffuser.','Single integrated ceiling fixture.','No ugly side-by-side LED + skylight.']},
+    ],
+    specs:[['Diameters','250mm or 350mm'],['LED','Integrated dimmable'],['Smart','App + Alexa + Google + HomeKit'],['Warranty','Lifetime + 5yr LED']],
+  },
+  {
+    slug:'/gold-coast-skylights/solatube-skylights/solatube-econotube/',parent:'solatube',crumbs:SOLATUBE_CRUMBS,
+    metaTitle:'Solatube Econotube Gold Coast | Tintek',
+    metaDesc:'Solatube Econotube — affordable Solatube tubular skylight with the same patented tubing.',
+    h1:'Solatube Econotube',crumbCurrent:'Econotube',
+    heroSub:`The smart-budget Solatube. Genuine Solatube quality with a streamlined kit and price point designed to make tubular daylighting accessible for every home.`,
+    heroImg:'HGTV-EMHE-kitchen-1-low-res-exp-03-29-2021.jpg',
+    productImg:'Solatube-Econotube.png',
+    productFeatures:['Same Spectralight Infinity tubing as premium models.','Simplified diffuser — lower price point.','Available in 250mm and 350mm.','Half-day installation.','Lifetime manufacturer warranty.','Perfect for hallways, robes, ensuites.'],
+    explainerTitle:'Solatube Econotube — real Solatube quality at a smart price.',
+    explainers:[
+      {img:'wired-outline-434-prize-padge-ribbon-hover-pinch.png',title:'Best Value',bullets:['Genuine Solatube tubing at the lowest price.','No compromise on daylight output.','Half-day installation.']},
+      {img:'wired-outline-804-sun-hover-rays.png',title:'Same Daylight',bullets:['99.7% reflective Spectralight tubing.','Identical to premium models.','Bright natural daylight all day.']},
+      {img:'wired-outline-457-shield-security-hover-pinch.png',title:'Lifetime Warranty',bullets:['Full Solatube lifetime warranty.','Premium tubing engineered to last.','Backed by Tintek’s install warranty.']},
+    ],
+    specs:[['Diameters','250mm or 350mm'],['Reflectivity','99.7% Spectralight'],['Diffuser','Simplified'],['Warranty','Lifetime']],
+  },
+  {
+    slug:'/gold-coast-skylights/solatube-skylights/commercial-solatube/',parent:'solatube',crumbs:SOLATUBE_CRUMBS,
+    metaTitle:'Commercial Solatube SkyVault Gold Coast | Tintek',
+    metaDesc:'Solatube SkyVault Series for commercial buildings — warehouses, schools, retail.',
+    h1:'Commercial Solatube',crumbCurrent:'Commercial Solatube',
+    heroSub:`Solatube’s commercial-grade tubular daylighting. Engineered for warehouses, schools, retail spaces, gymnasiums and any large-volume commercial building — with massive lumen output and energy savings.`,
+    heroImg:'van-den-Haak-distribution-center-the-Netherlands-resized.jpg',
+    productImg:'SkyVault-Series2.png',
+    productFeatures:['Heavy-duty commercial spec.','Suits 6m+ ceiling heights, up to 18m.','Massive lumen output — highest in the Solatube range.','Significant lighting electricity reduction.','Contributes to Green Star and NABERS ratings.','Engineered for industrial loads.'],
+    explainerTitle:'Commercial Solatube — daylight for warehouses, schools, gyms and retail.',
+    explainers:[
+      {img:'wired-outline-2272-podium-hover-pinch.png',title:'Commercial Grade',bullets:['Engineered for warehouses, schools, retail.','Heavy-duty commercial components.','Suitable for ceilings up to 18m.']},
+      {img:'wired-outline-804-sun-hover-rays.png',title:'High Lumen Output',bullets:['Highest output in the Solatube range.','Replaces hundreds of light fittings.','Bright daylight all day, every day.']},
+      {img:'wired-outline-401-leaves-eco-hover-spin.png',title:'Energy Savings',bullets:['Significant lighting electricity reduction.','Contributes to Green Star credits.','Lower running costs from day one.']},
+    ],
+    specs:[['Use cases','Warehouses, schools, retail'],['Ceiling height','Up to 18m'],['Lumens','Highest in the range'],['Warranty','10 years commercial']],
+  },
+  {
+    slug:'/gold-coast-skylights/solatube-skylights/solatube-solastar/',parent:'solatube',crumbs:SOLATUBE_CRUMBS,
+    metaTitle:'Solatube SolaStar Solar Roof Vent Gold Coast | Tintek',
+    metaDesc:'Solatube SolaStar — solar-powered roof exhaust fan that cools your roof cavity and lowers cooling bills.',
+    h1:'Solatube SolaStar',crumbCurrent:'SolaStar',
+    heroSub:`The SolaStar is a solar-powered roof exhaust fan that pulls hot, humid air out of your roof cavity — dropping cavity temps, reducing your air-con bills, and protecting your roof structure.`,
+    heroImg:'solar-star-technology-inside.jpg',
+    productImg:'solar-star-1_1024x1024.jpg',
+    productFeatures:['100% solar-powered — no wiring, no running cost.','Brushless DC motor — silent operation.','Pulls hot, humid air from your roof cavity.','Cuts air-conditioning costs.','Prevents moisture damage and mould.','25-year housing warranty + 5-year motor warranty.'],
+    explainerTitle:'Solatube SolaStar — cool your home from the roof down.',
+    explainers:[
+      {img:'wired-outline-442-thermometer-hover-changing.png',title:'Drops Cavity Temps',bullets:['Removes trapped hot air from your roof cavity.','Drops cavity temps by up to 25°C.','Makes your home noticeably cooler.']},
+      {img:'wired-outline-450-solar-panel-hover-pinch.png',title:'100% Solar Powered',bullets:['Built-in solar panel — no electrician needed.','Zero running cost forever.','Operates whenever the sun is shining.']},
+      {img:'wired-outline-447-water-drop-hover-split.png',title:'Stops Mould & Damp',bullets:['Removes humid air before it condenses.','Protects roof timbers from rot.','Prevents mould growth in the cavity.']},
+    ],
+    specs:[['Power','Solar panel (built-in)'],['Motor','Brushless DC — silent'],['Capacity','Suits homes up to 200m²'],['Warranty','25yr housing / 5yr motor']],
   },
 ];
 
