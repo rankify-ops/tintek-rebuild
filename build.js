@@ -703,8 +703,9 @@ function productHero(p, s) {
   const brandLogo = isVelux ? `${r}images/Velux_logo.svg` : `${r}images/logo-1.webp`;
   return `
 <section class="prodbar">
-  <div class="ctr">
-    <nav class="bcrumb bcrumb-light">
+  <div class="prodbar-bg"></div>
+  <div class="ctr prodbar-in">
+    <nav class="bcrumb">
       <a href="${r||'/'}">Home</a>${(s.crumbs||[]).map(([u,l])=>` <span>›</span> <a href="${r.replace(/\/$/,'')}${u}">${esc(l)}</a>`).join('')}
       <span>›</span> <span class="bcrumb-cur">${esc(s.crumbCurrent||s.h1)}</span>
     </nav>

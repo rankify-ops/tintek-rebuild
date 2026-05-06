@@ -506,13 +506,16 @@ img{max-width:100%;display:block}
 .prodcard .sarrow span{display:inline-block;transition:transform .25s}
 .prodcard.clickable:hover .sarrow span{transform:translateX(4px)}
 
-/* Product detail page — slim breadcrumb bar + image+content hero */
-.prodbar{background:var(--blue-50);border-bottom:1px solid var(--g100);padding:14px 0}
-.bcrumb-light{color:var(--g500)}
-.bcrumb-light a{color:var(--blue);font-weight:600}
-.bcrumb-light a:hover{color:var(--blue-dark)}
-.bcrumb-light span{color:var(--g300)}
-.bcrumb-light .bcrumb-cur{color:var(--blue-dark) !important;font-weight:700}
+/* Product detail page — dark banner with breadcrumb (sits behind absolute nav) */
+.prodbar{position:relative;min-height:170px;display:flex;align-items:flex-end;overflow:hidden}
+.prodbar-bg{position:absolute;inset:0;background:linear-gradient(135deg,var(--blue-dark) 0%,var(--blue) 70%,var(--blue-mid) 100%);z-index:0}
+.prodbar-bg::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 50%,rgba(59,130,246,.25) 0%,transparent 60%)}
+.prodbar-in{position:relative;z-index:1;width:100%;padding-top:110px;padding-bottom:22px}
+.prodbar .bcrumb{margin-bottom:0;color:rgba(255,255,255,.75)}
+.prodbar .bcrumb a{color:rgba(255,255,255,.9)}
+.prodbar .bcrumb a:hover{color:#fff}
+.prodbar .bcrumb span{color:rgba(255,255,255,.4)}
+.prodbar .bcrumb .bcrumb-cur{color:#fff !important;font-weight:700}
 
 .prodhero{padding:60px 0 80px;background:#fff}
 .prodhero + .tstrip{margin-top:0}
