@@ -508,7 +508,9 @@ img{max-width:100%;display:block}
 
 /* Product detail hero (image left, content right) */
 .ihero-bg-soft::after{background:linear-gradient(120deg,rgba(11,46,96,.85) 0%,rgba(11,46,96,.65) 50%,rgba(11,46,96,.4) 100%)}
-.prodhero{padding:60px 0 40px;background:#fff}
+.prodhero{padding:50px 0 80px;background:#fff}
+.prodhero + .tstrip{margin-top:0}
+.prodhero + .tstrip .tstrip-grid{box-shadow:var(--shadow);border-radius:var(--r)}
 .prodhero-g{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
 .prodhero-img{position:relative;text-align:center;background:linear-gradient(135deg,var(--blue-50) 0%,#fff 100%);border-radius:var(--r);padding:40px 30px;min-height:380px;display:flex;align-items:center;justify-content:center}
 .prodhero-img img{max-width:100%;max-height:480px;object-fit:contain;display:block;margin:0 auto}
