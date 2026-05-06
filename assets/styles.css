@@ -41,7 +41,7 @@ img{max-width:100%;display:block}
 .nav-l>li>a:hover{color:var(--accent-light)}
 .nav.scrolled .nav-l>li>a:hover{color:var(--blue)}
 .nav-l>li>a .chev{font-size:.5rem;opacity:.7}
-.dropdown{position:absolute;top:100%;left:0;background:#fff;border:1px solid var(--g100);border-radius:var(--rs);box-shadow:var(--shadow-l);min-width:240px;padding:8px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .25s;z-index:50}
+.dropdown{position:absolute;top:100%;left:0;background:#fff;border:1px solid var(--g100);border-radius:var(--rs);box-shadow:var(--shadow-l);min-width:280px;padding:8px;opacity:0;visibility:hidden;transform:translateY(8px);transition:all .25s;z-index:50;max-height:80vh;overflow-y:auto}
 .nav-l>li:hover .dropdown{opacity:1;visibility:visible;transform:translateY(0)}
 .dropdown a{display:block;padding:9px 12px;font-size:.83rem;color:var(--g700);font-weight:500;border-radius:var(--rxs);transition:all .15s;text-transform:none;letter-spacing:0;white-space:nowrap}
 .dropdown a:hover{background:var(--blue-light);color:var(--blue)}
