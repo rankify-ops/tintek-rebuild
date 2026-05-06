@@ -701,17 +701,13 @@ function productHero(p, s) {
   const r = root(p.slug);
   const isVelux = s.parent === 'velux';
   const brandLogo = isVelux ? `${r}images/Velux_logo.svg` : `${r}images/logo-1.webp`;
-  const brandStyle = isVelux ? 'background:#cf102d;padding:8px 16px;display:inline-block;margin-bottom:16px;border-radius:4px' : 'margin-bottom:16px;display:inline-block';
   return `
-<section class="ihero ihero-product">
-  <div class="ihero-bg ihero-bg-soft"><img src="${r}images/${s.heroImg||'PRINT__DSC8213_reduced.jpg'}" alt=""></div>
-  <div class="ihero-inner" style="padding:120px 0 40px">
-    <div class="ctr">
-      <nav class="bcrumb">
-        <a href="${r||'/'}">Home</a>${(s.crumbs||[]).map(([u,l])=>` <span>›</span> <a href="${r.replace(/\/$/,'')}${u}">${esc(l)}</a>`).join('')}
-        <span>›</span> <span class="bcrumb-cur">${esc(s.crumbCurrent||s.h1)}</span>
-      </nav>
-    </div>
+<section class="prodbar">
+  <div class="ctr">
+    <nav class="bcrumb bcrumb-light">
+      <a href="${r||'/'}">Home</a>${(s.crumbs||[]).map(([u,l])=>` <span>›</span> <a href="${r.replace(/\/$/,'')}${u}">${esc(l)}</a>`).join('')}
+      <span>›</span> <span class="bcrumb-cur">${esc(s.crumbCurrent||s.h1)}</span>
+    </nav>
   </div>
 </section>
 
@@ -723,7 +719,7 @@ function productHero(p, s) {
         ${s.warrantyImg?`<img class="warranty-badge" src="${r}images/${s.warrantyImg}" alt="Warranty">`:''}
       </div>
       <div class="prodhero-content fade">
-        <span class="brand-mark" style="${brandStyle}"><img src="${brandLogo}" alt="${isVelux?'Velux':'Solatube'}" style="height:28px;display:block${isVelux?';filter:brightness(0) invert(1)':''}"></span>
+        <img class="brand-logo brand-logo-${isVelux?'velux':'solatube'}" src="${brandLogo}" alt="${isVelux?'Velux':'Solatube'}">
         <h1>${esc(s.h1)}</h1>
         <p class="prodhero-sub">${esc(s.heroSub)}</p>
         ${s.productFeatures?`<h3 class="pf-title">Product Features</h3><ul class="pf-list">${s.productFeatures.map(f=>`<li>${esc(f)}</li>`).join('')}</ul>`:''}
