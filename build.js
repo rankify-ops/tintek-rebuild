@@ -239,6 +239,8 @@ function urgency(p, custom) {
   const r = root(p.slug);
   const heading = custom?.heading || `Ready for a roof that <span class="em">lasts a lifetime?</span>`;
   const body = custom?.body || `Book your obligation-free roof inspection and quote today. We service the entire Gold Coast, Tweed Heads, Brisbane and Northern NSW — usually with a quote in your inbox within 48 hours.`;
+  // If the page has its own quote form (product/contact pages), link to it locally; otherwise jump to /contact/
+  const quoteHref = custom?.localForm ? '#quote-form' : `${r}contact/#quote-form`;
   return `
 <div class="sec" style="padding-bottom:56px;padding-top:56px">
   <div class="urg fade">
@@ -247,7 +249,7 @@ function urgency(p, custom) {
       <h3>${heading}</h3>
       <p>${esc(body)}</p>
       <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-        <a href="${r}contact/#quote-form" class="btn-p">Request a Quote →</a>
+        <a href="${quoteHref}" class="btn-p">Request a Quote →</a>
         <a href="tel:0428219634" class="btn-glass">📞 0428 219 634</a>
       </div>
     </div>
@@ -293,14 +295,21 @@ function rcard([initial, name, text]) {
   return `<div class="rcard"><div class="rs">★★★★★</div><p class="rt">"${esc(text)}"</p><div class="ra"><div class="rav">${esc(initial)}</div><div><div class="ran">${esc(name)}</div><div class="ral">Google Review</div></div></div></div>`;
 }
 
-function quoteForm(p) { return `
+function quoteForm(p, opts) {
+  opts = opts || {};
+  const product = opts.product || '';
+  const intro = opts.intro || `Tell us a few quick details about your project and we'll come back with a tailored solution and obligation-free quote.`;
+  const heading = opts.heading || `Get a free quote<br>in 60 seconds`;
+  const tag = opts.tag || `⚡ Request a Free Quote Below`;
+  const title = opts.title || `Quick 60-Second Quote`;
+  return `
 <section class="sec form-sec" id="quote">
   <div class="ctr">
     <div class="form-g">
       <div class="form-info fade">
-        <span class="sec-tag">Free Quote</span>
-        <h2 class="sec-t">Get a free quote<br>in 60 seconds</h2>
-        <p class="sec-sub">Tell us a few quick details about your project and we'll come back with a tailored solution and obligation-free quote.</p>
+        <span class="sec-tag">${product?'Product Quote':'Free Quote'}</span>
+        <h2 class="sec-t">${heading}</h2>
+        <p class="sec-sub">${esc(intro)}</p>
         <div class="fperks">
           <div class="fperk"><div class="fpd">✓</div>Free, no-obligation quote</div>
           <div class="fperk"><div class="fpd">✓</div>Quote turnaround within 48 hours</div>
@@ -312,10 +321,11 @@ function quoteForm(p) { return `
           <div class="fc-item"><div class="fc-ic">✉</div><div><div class="fc-l">Email</div><a href="mailto:admin@tintek.com.au" class="fc-v">admin@tintek.com.au</a></div></div>
         </div>
       </div>
-      <div class="qform fade" id="quote-form">
+      <div class="qform fade" id="quote-form"${product?` data-product="${esc(product)}"`:''}>
         <div class="qform-head">
-          <div class="qform-tag">⚡ Request a Free Quote Below</div>
-          <h3 class="qform-title">Quick 60-Second Quote</h3>
+          <div class="qform-tag">${tag}</div>
+          <h3 class="qform-title">${esc(title)}</h3>
+          ${product?`<p class="qform-product-note">Enquiring about: <strong>${esc(product)}</strong></p>`:''}
         </div>
         <div class="fsteps"><div class="fstep active"></div><div class="fstep"></div><div class="fstep"></div><div class="fstep"></div></div>
         <div class="fslide active" data-s="1">
@@ -735,7 +745,7 @@ function productHero(p, s) {
         ${s.productFeatures?`<h3 class="pf-title">Product Features</h3><ul class="pf-list">${s.productFeatures.map(f=>`<li>${esc(f)}</li>`).join('')}</ul>`:''}
         <div class="prodhero-btns">
           ${s.brochure?`<a href="${s.brochure}" target="_blank" rel="noopener" class="btn-blue">Download Brochure</a>`:''}
-          <a href="${r}contact/#quote-form" class="btn-p">Request a Quote →</a>
+          <a href="#quote-form" class="btn-p">Request a Quote →</a>
         </div>
       </div>
     </div>
@@ -781,9 +791,19 @@ function buildProductPage(s) {
       <div class="sec-head"><div class="divider"><span class="sec-tag">Specifications</span></div><h2 class="sec-t fade">At a glance</h2></div>
       <div class="specs-g">${s.specs.map(sp=>`<div class="spec-i fade"><span class="spec-k">${esc(sp[0])}</span><span class="spec-v">${esc(sp[1])}</span></div>`).join('')}</div>
     </div></section>` : '',
-    urgency(p,{heading:`Get a free quote on the <span class="em">${esc(s.h1)}.</span>`,body:`Our certified installers will measure your roof, recommend the right model, and give you a fixed-price quote — free, with no obligation.`}),
+    urgency(p,{
+      heading:`Get a free quote on the <span class="em">${esc(s.h1)}.</span>`,
+      body:`Our certified installers will measure your roof, recommend the right model, and give you a fixed-price quote — free, with no obligation.`,
+      localForm:true
+    }),
+    quoteForm(p,{
+      product:s.h1,
+      heading:`Get a quote on the<br><span style="color:var(--blue)">${esc(s.h1)}</span>`,
+      intro:`Tell us about your roof and we'll come back with a fixed-price quote on the ${s.h1} — including measurement, supply, install, and warranty.`,
+      tag:`⚡ Quote — ${esc(s.h1)}`,
+      title:`Request a Quote — ${s.h1}`
+    }),
     relatedSkylights(p,s.parent,s.slug),
-    quoteForm(p),
     partners(p),
     areasSection(p),
     footer(p)

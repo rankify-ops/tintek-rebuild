@@ -147,23 +147,38 @@ function sub(ev) {
   var propertyType = labels.s2[fd.s2] || fd.s2 || 'Not specified';
   var urgency = labels.s3[fd.s3] || fd.s3 || 'Not specified';
 
+  // If the form is on a product page, the wrapper has data-product set.
+  // We prepend that to the message so the inbox shows which product the
+  // customer was actually looking at when they submitted.
+  var productCtx = '';
+  var qformEl = document.getElementById('quote-form');
+  if (qformEl && qformEl.dataset && qformEl.dataset.product) {
+    productCtx = qformEl.dataset.product;
+  }
+
   // Inline all wizard data into the `message` field — FormSubmit reliably
   // renders name/email/phone/message via the AJAX endpoint, but custom fields
   // get silently dropped, so we pack everything into message.
-  var msg = [
-    '*** NEW QUOTE REQUEST from ' + n + ' (' + s + ') ***',
-    '',
-    'Project Type: ' + projectType,
-    'Property Type: ' + propertyType,
-    'Urgency: ' + urgency,
-    'Suburb: ' + s,
-    '',
-    '--- Submission details ---',
-    'Page: ' + location.pathname + location.search,
-    'Submitted: ' + new Date().toLocaleString('en-AU', { timeZone: 'Australia/Brisbane' }) + ' AEST',
-    '',
-    'Reply directly to this customer at: ' + e
-  ].join('\n');
+  var lines = [];
+  if (productCtx) {
+    lines.push('*** PRODUCT QUOTE: ' + productCtx + ' ***');
+    lines.push('Customer: ' + n + ' (' + s + ')');
+  } else {
+    lines.push('*** NEW QUOTE REQUEST from ' + n + ' (' + s + ') ***');
+  }
+  lines.push('');
+  if (productCtx) lines.push('Product: ' + productCtx);
+  lines.push('Project Type: ' + projectType);
+  lines.push('Property Type: ' + propertyType);
+  lines.push('Urgency: ' + urgency);
+  lines.push('Suburb: ' + s);
+  lines.push('');
+  lines.push('--- Submission details ---');
+  lines.push('Page: ' + location.pathname + location.search);
+  lines.push('Submitted: ' + new Date().toLocaleString('en-AU', { timeZone: 'Australia/Brisbane' }) + ' AEST');
+  lines.push('');
+  lines.push('Reply directly to this customer at: ' + e);
+  var msg = lines.join('\n');
 
   // ⚠️ Stick to exactly these fields. FormSubmit's free tier silently breaks
   // body rendering if you add any underscored config (_subject, _captcha, _replyto)
