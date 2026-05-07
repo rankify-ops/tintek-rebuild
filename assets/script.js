@@ -46,6 +46,13 @@ if (mobTog && mdrawer) {
   mdrawer.querySelectorAll('a').forEach(function (a) {
     a.addEventListener('click', function () { toggleDrawer(false); });
   });
+  // Explicit close button inside the drawer
+  var mdClose = document.getElementById('mdClose');
+  if (mdClose) mdClose.addEventListener('click', function () { toggleDrawer(false); });
+  // Esc key closes it too
+  document.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Escape' && mdrawer.classList.contains('open')) toggleDrawer(false);
+  });
 }
 
 // =====================================================
