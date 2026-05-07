@@ -140,18 +140,25 @@ function sub(ev) {
   var btn = (ev && ev.target) || document.querySelector('.fslide.active .fn');
   if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
 
+  // Build the email body. FormSubmit's _template:'basic' renders each field
+  // labelled and styled. Other templates (table/box/none) silently drop fields
+  // when sent via the AJAX/JSON endpoint, so 'basic' is what we use.
+  var projectType = labels.s1[fd.s1] || fd.s1 || 'Not specified';
+  var propertyType = labels.s2[fd.s2] || fd.s2 || 'Not specified';
+  var urgency = labels.s3[fd.s3] || fd.s3 || 'Not specified';
+
   var payload = {
     _subject: 'New Quote Request — ' + n + ' (' + s + ')',
-    _template: 'box',
+    _template: 'basic',
     _captcha: 'false',
     _replyto: e,
     name: n,
     phone: p,
     email: e,
     suburb: s,
-    project_type: labels.s1[fd.s1] || fd.s1 || 'Not specified',
-    property_type: labels.s2[fd.s2] || fd.s2 || 'Not specified',
-    urgency: labels.s3[fd.s3] || fd.s3 || 'Not specified',
+    project_type: projectType,
+    property_type: propertyType,
+    urgency: urgency,
     page: location.pathname + location.search,
     submitted_at: new Date().toISOString()
   };
@@ -166,12 +173,11 @@ function sub(ev) {
       return r.json();
     })
     .then(function (d) {
-      if (d && (d.success || d.success === 'true')) {
+      if (d && (d.success === true || d.success === 'true')) {
         cs = 5;
         document.querySelectorAll('.fslide').forEach(function (sl) { sl.classList.remove('active'); });
         document.querySelector('.fslide[data-s="5"]').classList.add('active');
         document.querySelectorAll('.fstep').forEach(function (sl) { sl.classList.remove('active'); sl.classList.add('done'); });
-        // Optional: track in GA4 / Google Tag Manager if loaded
         if (typeof gtag === 'function') gtag('event', 'generate_lead', { value: 1, currency: 'AUD' });
         if (window.dataLayer) window.dataLayer.push({ event: 'quote_form_submitted', suburb: s });
       } else {
