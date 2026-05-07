@@ -151,21 +151,25 @@ function sub(ev) {
   // renders name/email/phone/message via the AJAX endpoint, but custom fields
   // get silently dropped, so we pack everything into message.
   var msg = [
-    'Suburb: ' + s,
+    '*** NEW QUOTE REQUEST from ' + n + ' (' + s + ') ***',
+    '',
     'Project Type: ' + projectType,
     'Property Type: ' + propertyType,
     'Urgency: ' + urgency,
+    'Suburb: ' + s,
     '',
-    '— Submission details —',
+    '--- Submission details ---',
     'Page: ' + location.pathname + location.search,
-    'Submitted: ' + new Date().toLocaleString('en-AU', { timeZone: 'Australia/Brisbane' }) + ' AEST'
+    'Submitted: ' + new Date().toLocaleString('en-AU', { timeZone: 'Australia/Brisbane' }) + ' AEST',
+    '',
+    'Reply directly to this customer at: ' + e
   ].join('\n');
 
+  // ⚠️ Stick to exactly these fields. FormSubmit's free tier silently breaks
+  // body rendering if you add any underscored config (_subject, _captcha, _replyto)
+  // to a JSON/AJAX submission. Keep it bare.
   var payload = {
-    _subject: 'New Quote Request — ' + n + ' (' + s + ')',
     _template: 'basic',
-    _captcha: 'false',
-    _replyto: e,
     name: n,
     email: e,
     phone: p,
