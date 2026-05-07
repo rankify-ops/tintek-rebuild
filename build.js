@@ -131,7 +131,7 @@ function nav(p) {
     </ul>
     <div class="nav-r">
       <a href="tel:0428219634" class="nav-ph"><span class="ph-ic">📞</span>0428 219 634</a>
-      <a href="${r}contact/#quote-form" class="nav-cta">Free Quote</a>
+      <a href="#quote-form" class="nav-cta" data-fallback="${r}contact/#quote-form">Free Quote</a>
       <button class="mob-tog" id="mobTog" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
   </div>
@@ -156,7 +156,7 @@ function drawer(p) {
   </ul>
   <div class="mdrawer-cta">
     <a href="tel:0428219634" class="mc-call">📞 0428 219 634</a>
-    <a href="${r}contact/#quote-form" class="mc-quote">Get a Free Quote →</a>
+    <a href="#quote-form" class="mc-quote" data-fallback="${r}contact/#quote-form">Get a Free Quote →</a>
   </div>
 </div>`;
 }
@@ -472,7 +472,7 @@ function sticky(p) {
   return `
 <div class="sticky">
   <a href="tel:0428219634" class="sc">📞 Call Us</a>
-  <a href="${r}contact/#quote-form" class="sq">Free Quote</a>
+  <a href="#quote-form" class="sq" data-fallback="${r}contact/#quote-form">Free Quote</a>
 </div>`;
 }
 

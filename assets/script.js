@@ -326,7 +326,9 @@ function subSimple(ev) {
     });
 }
 
-// Smooth scroll for anchor links
+// Smooth scroll for anchor links — with fallback for buttons that have a
+// data-fallback URL (used by global "Free Quote" buttons that point to
+// #quote-form locally but should jump to /contact/ if no form on the page).
 document.querySelectorAll('a[href^="#"]').forEach(function (a) {
   a.addEventListener('click', function (ev) {
     var h = a.getAttribute('href');
@@ -335,6 +337,10 @@ document.querySelectorAll('a[href^="#"]').forEach(function (a) {
     if (t) {
       ev.preventDefault();
       t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else if (a.dataset && a.dataset.fallback) {
+      // No #quote-form on this page — bounce to the contact page form
+      ev.preventDefault();
+      location.href = a.dataset.fallback;
     }
   });
 });
