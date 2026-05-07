@@ -147,20 +147,29 @@ function sub(ev) {
   var propertyType = labels.s2[fd.s2] || fd.s2 || 'Not specified';
   var urgency = labels.s3[fd.s3] || fd.s3 || 'Not specified';
 
+  // Inline all wizard data into the `message` field — FormSubmit reliably
+  // renders name/email/phone/message via the AJAX endpoint, but custom fields
+  // get silently dropped, so we pack everything into message.
+  var msg = [
+    'Suburb: ' + s,
+    'Project Type: ' + projectType,
+    'Property Type: ' + propertyType,
+    'Urgency: ' + urgency,
+    '',
+    '— Submission details —',
+    'Page: ' + location.pathname + location.search,
+    'Submitted: ' + new Date().toLocaleString('en-AU', { timeZone: 'Australia/Brisbane' }) + ' AEST'
+  ].join('\n');
+
   var payload = {
     _subject: 'New Quote Request — ' + n + ' (' + s + ')',
     _template: 'basic',
     _captcha: 'false',
     _replyto: e,
     name: n,
-    phone: p,
     email: e,
-    suburb: s,
-    project_type: projectType,
-    property_type: propertyType,
-    urgency: urgency,
-    page: location.pathname + location.search,
-    submitted_at: new Date().toISOString()
+    phone: p,
+    message: msg
   };
 
   fetch('https://formsubmit.co/ajax/' + encodeURIComponent(FORM_EMAIL), {
