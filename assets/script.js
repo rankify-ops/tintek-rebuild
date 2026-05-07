@@ -8,7 +8,7 @@
 // Where quote requests get emailed to.
 // First submission triggers an activation email — click the link in it
 // and every future submission arrives instantly.
-var FORM_EMAIL = 'tflood@rankify.com.au';
+var FORM_EMAIL = 'admin@tintek.com.au';
 
 // =============================================================
 
