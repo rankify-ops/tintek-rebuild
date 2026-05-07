@@ -164,6 +164,9 @@ function drawer(p) {
 function innerHero(p) {
   const r = root(p.slug);
   const bg = p.heroImg ? `${r}images/${p.heroImg}` : `${r}images/PRINT__DSC8213_reduced.jpg`;
+  // Most inner pages render a quoteForm() at the bottom — link the hero CTA to that local form.
+  // /contact/ itself has its own form too (id="quote-form"), so #quote-form is safe everywhere.
+  const quoteHref = p.contactCta ? `${r}contact/#quote-form` : '#quote-form';
   return `
 <section class="ihero">
   <div class="ihero-bg"><img src="${bg}" alt=""></div>
@@ -177,7 +180,7 @@ function innerHero(p) {
       <h1>${p.h1Markup || esc(p.h1)}</h1>
       <p class="ihero-sub">${p.heroSub}</p>
       <div class="ihero-btns">
-        <a href="${r}contact/#quote-form" class="btn-p">Get Your Free Quote →</a>
+        <a href="${quoteHref}" class="btn-p">Get Your Free Quote →</a>
         <a href="tel:0428219634" class="btn-glass">📞 0428 219 634</a>
       </div>
     </div>
@@ -219,6 +222,7 @@ function featureGrid(features) { return `
 function splitSection(s, p) {
   const r = root(p.slug);
   const flip = s.flip ? ' split-flip' : '';
+  const quoteHref = s.localForm ? '#quote-form' : `${r}contact/#quote-form`;
   return `
 <section class="sec split-sec${flip ? ' alt' : ''}">
   <div class="ctr">
@@ -229,7 +233,7 @@ function splitSection(s, p) {
         <h2 class="sec-t">${esc(s.title)}</h2>
         ${s.body.map(p => `<p class="sec-sub" style="margin-bottom:14px">${p}</p>`).join('')}
         ${s.bullets ? `<div class="about-list">${s.bullets.map(b => `<div class="al-item"><div class="al-check">✓</div>${esc(b)}</div>`).join('')}</div>` : ''}
-        <a href="${r}contact/#quote-form" class="btn-blue" style="margin-top:8px">Get a Free Quote →</a>
+        <a href="${quoteHref}" class="btn-blue" style="margin-top:8px">Get a Free Quote →</a>
       </div>
     </div>
   </div>
@@ -670,9 +674,9 @@ function buildServicePage(s) {
   p.bodyHTML = [
     innerHero(p),
     trustStrip(),
-    splitSection({tag:'Overview',title:s.overviewTitle,body:s.overviewBody,bullets:s.overviewBullets,img:s.splitImg||s.heroImg||'PRINT__DSC8213_reduced.jpg'},p),
+    splitSection({tag:'Overview',title:s.overviewTitle,body:s.overviewBody,bullets:s.overviewBullets,img:s.splitImg||s.heroImg||'PRINT__DSC8213_reduced.jpg',localForm:true},p),
     featureGrid({tag:"What's Included",title:s.featuresTitle,sub:s.featuresSub,items:s.features}),
-    urgency(p,{heading:`Need ${s.shortName.toLowerCase()}? <span class="em">Get a free quote today.</span>`,body:`Free, no-obligation quote within 48 hours. QBCC licensed, fully insured, industry warranties.`}),
+    urgency(p,{heading:`Need ${s.shortName.toLowerCase()}? <span class="em">Get a free quote today.</span>`,body:`Free, no-obligation quote within 48 hours. QBCC licensed, fully insured, industry warranties.`,localForm:true}),
     whyMini(),
     s.gallery!==false ? gallery(p) : '',
     reviewsSection(),
@@ -967,9 +971,9 @@ function buildRoofingTypePage(s) {
   p.bodyHTML = [
     innerHero(p),
     trustStrip(),
-    splitSection({tag:'Overview',title:s.overviewTitle,body:s.overviewBody,bullets:s.overviewBullets,img:s.splitImg||s.heroImg||'PRINT__DSC8213_reduced.jpg'},p),
+    splitSection({tag:'Overview',title:s.overviewTitle,body:s.overviewBody,bullets:s.overviewBullets,img:s.splitImg||s.heroImg||'PRINT__DSC8213_reduced.jpg',localForm:true},p),
     featureGrid({tag:'Why Choose This',title:s.featuresTitle,sub:s.featuresSub,items:s.features}),
-    urgency(p,{heading:`Ready for your <span class="em">${s.shortName} project?</span>`,body:`Book a free, no-obligation quote with the Gold Coast's preferred roofing team.`}),
+    urgency(p,{heading:`Ready for your <span class="em">${s.shortName} project?</span>`,body:`Book a free, no-obligation quote with the Gold Coast's preferred roofing team.`,localForm:true}),
     processSection(p),
     gallery(p),
     reviewsSection(),
