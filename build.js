@@ -148,6 +148,7 @@ function drawer(p) {
     <li><a href="${r}roofing/">Roofing</a></li>
     ${NAV.roofing.map(([u,l]) => `<li><a href="${r.replace(/\/$/,'')}${u}" class="sublink">${l}</a></li>`).join('')}
     <li><a href="${r}gold-coast-skylights/">Skylights</a></li>
+    ${NAV.skylights.map(([u,l]) => `<li><a href="${r.replace(/\/$/,'')}${u}" class="sublink">${l}</a></li>`).join('')}
     <li><a href="${r}locations/">Service Areas</a></li>
     <li><a href="${r}about/">About</a></li>
     <li><a href="${r}faq/">FAQ</a></li>
