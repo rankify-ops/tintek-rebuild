@@ -231,6 +231,101 @@ function sub(ev) {
     });
 }
 
+// =====================================================
+// Simple Product Form (used on product pages — no wizard)
+// =====================================================
+function subSimple(ev) {
+  if (ev && ev.preventDefault) ev.preventDefault();
+  clearFieldErrors();
+
+  var n = (document.getElementById('fn') || {}).value || '';
+  var p = (document.getElementById('fp') || {}).value || '';
+  var e = (document.getElementById('fe') || {}).value || '';
+  var s = (document.getElementById('fs') || {}).value || '';
+  var notes = (document.getElementById('fnotes') || {}).value || '';
+  n = n.trim(); p = p.trim(); e = e.trim(); s = s.trim(); notes = notes.trim();
+
+  // Honeypot
+  var hp = document.getElementById('fhp');
+  if (hp && hp.value) return;
+
+  // Validation
+  var ok = true;
+  if (!n) { showFieldError('fn', 'Please enter your name'); ok = false; }
+  if (!p || !validPhone(p)) { showFieldError('fp', 'Please enter a valid phone number'); ok = false; }
+  if (!e || !validEmail(e)) { showFieldError('fe', 'Please enter a valid email'); ok = false; }
+  if (!s) { showFieldError('fs', 'Please enter your suburb'); ok = false; }
+  if (!ok) return;
+
+  var btn = (ev && ev.target) || document.querySelector('.psimple .fn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
+
+  // Read product context from form
+  var qformEl = document.getElementById('quote-form');
+  var product = (qformEl && qformEl.dataset && qformEl.dataset.product) || 'Product enquiry';
+
+  var lines = [
+    '*** PRODUCT QUOTE: ' + product + ' ***',
+    'Customer: ' + n + ' (' + s + ')',
+    '',
+    'Product: ' + product,
+    'Suburb: ' + s
+  ];
+  if (notes) {
+    lines.push('');
+    lines.push('Customer notes:');
+    lines.push(notes);
+  }
+  lines.push('');
+  lines.push('--- Submission details ---');
+  lines.push('Page: ' + location.pathname + location.search);
+  lines.push('Submitted: ' + new Date().toLocaleString('en-AU', { timeZone: 'Australia/Brisbane' }) + ' AEST');
+  lines.push('');
+  lines.push('Reply directly to this customer at: ' + e);
+
+  var payload = {
+    _template: 'basic',
+    name: n,
+    email: e,
+    phone: p,
+    message: lines.join('\n')
+  };
+
+  fetch('https://formsubmit.co/ajax/' + encodeURIComponent(FORM_EMAIL), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function (d) {
+      if (d && (d.success === true || d.success === 'true')) {
+        var formBox = document.querySelector('.psimple');
+        var success = document.querySelector('.psimple-success');
+        if (formBox) formBox.style.display = 'none';
+        if (success) success.style.display = 'block';
+        if (typeof gtag === 'function') gtag('event', 'generate_lead', { value: 1, currency: 'AUD', product: product });
+        if (window.dataLayer) window.dataLayer.push({ event: 'product_quote_submitted', product: product, suburb: s });
+      } else {
+        throw new Error((d && d.message) || 'Unknown response');
+      }
+    })
+    .catch(function (err) {
+      if (btn) { btn.disabled = false; btn.textContent = 'Request My Quote →'; }
+      var msg = 'Sorry — we could not send your enquiry. Please call us on 0428 219 634 or email admin@tintek.com.au.';
+      var box = document.querySelector('.psimple');
+      if (box) {
+        var existing = box.querySelector('.form-err-msg');
+        if (existing) existing.remove();
+        var err2 = document.createElement('p');
+        err2.className = 'form-err-msg';
+        err2.style.cssText = 'background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:12px 14px;border-radius:8px;font-size:.85rem;margin-top:14px;line-height:1.5';
+        err2.textContent = msg;
+        box.appendChild(err2);
+      }
+      console.error('Product quote error:', err);
+    });
+}
+
 // Smooth scroll for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(function (a) {
   a.addEventListener('click', function (ev) {

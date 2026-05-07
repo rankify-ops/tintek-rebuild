@@ -156,12 +156,12 @@
     <div class="form-g">
       <div class="form-info fade">
         <span class="sec-tag">Product Quote</span>
-        <h2 class="sec-t">Get a quote on the<br><span style="color:var(--blue)">VELUX VSE</span></h2>
-        <p class="sec-sub">Tell us about your roof and we&#39;ll come back with a fixed-price quote on the VELUX VSE — including measurement, supply, install, and warranty.</p>
+        <h2 class="sec-t">Quote on the<br><span style="color:var(--blue)">VELUX VSE</span></h2>
+        <p class="sec-sub">Tell us a few details and we&#39;ll come back with a fixed-price quote on the VELUX VSE — supply, install, and warranty included. Free, no obligation.</p>
         <div class="fperks">
           <div class="fperk"><div class="fpd">✓</div>Free, no-obligation quote</div>
           <div class="fperk"><div class="fpd">✓</div>Quote turnaround within 48 hours</div>
-          <div class="fperk"><div class="fpd">✓</div>QBCC licensed & fully insured</div>
+          <div class="fperk"><div class="fpd">✓</div>Certified Velux installer</div>
           <div class="fperk"><div class="fpd">✓</div>Industry-leading manufacturer warranties</div>
         </div>
         <div class="form-contacts">
@@ -169,58 +169,26 @@
           <div class="fc-item"><div class="fc-ic">✉</div><div><div class="fc-l">Email</div><a href="mailto:admin@tintek.com.au" class="fc-v">admin@tintek.com.au</a></div></div>
         </div>
       </div>
-      <div class="qform fade" id="quote-form" data-product="VELUX VSE">
+      <div class="qform fade" id="quote-form" data-product="VELUX VSE" data-mode="product">
         <div class="qform-head">
           <div class="qform-tag">⚡ Quote — VELUX VSE</div>
-          <h3 class="qform-title">Request a Quote — VELUX VSE</h3>
+          <h3 class="qform-title">Request a Quote</h3>
           <p class="qform-product-note">Enquiring about: <strong>VELUX VSE</strong></p>
         </div>
-        <div class="fsteps"><div class="fstep active"></div><div class="fstep"></div><div class="fstep"></div><div class="fstep"></div></div>
-        <div class="fslide active" data-s="1">
-          <h3>What kind of project?</h3><p class="fsub">Pick the option that best describes your needs.</p>
-          <div class="og">
-            <button class="ob" data-v="new" onclick="sel(this)"><div class="oico">🏠</div><div class="olbl">New Roofing</div></button>
-            <button class="ob" data-v="reroof" onclick="sel(this)"><div class="oico">🔄</div><div class="olbl">Re-Roofing</div></button>
-            <button class="ob" data-v="repair" onclick="sel(this)"><div class="oico">🔧</div><div class="olbl">Repairs</div></button>
-            <button class="ob" data-v="other" onclick="sel(this)"><div class="oico">💬</div><div class="olbl">Other</div></button>
-          </div>
-          <div class="fnav"><button class="fn" onclick="nxt()">Next →</button></div>
-        </div>
-        <div class="fslide" data-s="2">
-          <h3>What type of property?</h3><p class="fsub">This helps us recommend the right materials.</p>
-          <div class="og">
-            <button class="ob" data-v="residential" onclick="sel(this)"><div class="oico">🏡</div><div class="olbl">Residential</div></button>
-            <button class="ob" data-v="commercial" onclick="sel(this)"><div class="oico">🏢</div><div class="olbl">Commercial</div></button>
-            <button class="ob" data-v="industrial" onclick="sel(this)"><div class="oico">🏭</div><div class="olbl">Industrial</div></button>
-            <button class="ob" data-v="heritage" onclick="sel(this)"><div class="oico">🏛️</div><div class="olbl">Heritage</div></button>
-          </div>
-          <div class="fnav"><button class="fb" onclick="prv()">← Back</button><button class="fn" onclick="nxt()">Next →</button></div>
-        </div>
-        <div class="fslide" data-s="3">
-          <h3>How urgent is the work?</h3><p class="fsub">We can prioritise emergency callouts where needed.</p>
-          <div class="og">
-            <button class="ob" data-v="emergency" onclick="sel(this)"><div class="oico">🚨</div><div class="olbl">Emergency</div></button>
-            <button class="ob" data-v="month" onclick="sel(this)"><div class="oico">⏱️</div><div class="olbl">Within a month</div></button>
-            <button class="ob" data-v="3months" onclick="sel(this)"><div class="oico">📅</div><div class="olbl">Within 3 months</div></button>
-            <button class="ob" data-v="planning" onclick="sel(this)"><div class="oico">💭</div><div class="olbl">Just planning</div></button>
-          </div>
-          <div class="fnav"><button class="fb" onclick="prv()">← Back</button><button class="fn" onclick="nxt()">Next →</button></div>
-        </div>
-        <div class="fslide" data-s="4">
-          <h3>Almost done — your details</h3><p class="fsub">We'll be in touch within 24 hours.</p>
+        <div class="psimple">
+          <p class="fsub" style="margin-bottom:18px">Fill in your details and we'll get back within 24 hours.</p>
           <input type="text" class="finp" placeholder="Your name" id="fn" autocomplete="name" required>
           <input type="tel" class="finp" placeholder="Phone number" id="fp" autocomplete="tel" required>
           <input type="email" class="finp" placeholder="Email address" id="fe" autocomplete="email" required>
           <input type="text" class="finp" placeholder="Suburb" id="fs" autocomplete="address-level2" required>
+          <textarea class="finp" placeholder="Anything else we should know? (optional)" id="fnotes" rows="3" style="resize:vertical;font-family:inherit"></textarea>
           <input type="text" id="fhp" name="_honey" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" aria-hidden="true">
-          <div class="fnav"><button type="button" class="fb" onclick="prv()">← Back</button><button type="button" class="fn" onclick="sub(event)">Request My Quote →</button></div>
+          <button type="button" class="fn" onclick="subSimple(event)" style="width:100%;margin-top:6px">Request My Quote →</button>
         </div>
-        <div class="fslide" data-s="5">
-          <div style="text-align:center;padding:32px 0">
-            <div style="font-size:2.6rem;margin-bottom:12px">✅</div>
-            <h3 style="margin-bottom:8px;font-size:1.4rem">Thanks — we're on it!</h3>
-            <p class="fsub" style="margin:0;font-size:.95rem">We'll be in touch within 24 hours with your tailored quote and recommendations.</p>
-          </div>
+        <div class="psimple-success" style="display:none;text-align:center;padding:32px 0">
+          <div style="font-size:2.6rem;margin-bottom:12px">✅</div>
+          <h3 style="margin-bottom:8px;font-size:1.4rem">Thanks — we're on it!</h3>
+          <p class="fsub" style="margin:0;font-size:.95rem">We'll be in touch within 24 hours with your tailored quote on the VELUX VSE.</p>
         </div>
       </div>
     </div>

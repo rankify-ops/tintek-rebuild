@@ -716,6 +716,59 @@ function buildSkylightPage(s) {
   return p;
 }
 
+// Simple single-step quote form for product pages.
+// No wizard / project-type questions — the customer is on a specific product
+// page so the context is implicit. Just collect contact details.
+function productQuoteForm(p, opts) {
+  opts = opts || {};
+  const product = opts.product || '';
+  const intro = opts.intro || `Tell us a few details and we'll come back with a fixed-price quote on the ${product} — supply, install, and warranty included.`;
+  return `
+<section class="sec form-sec" id="quote">
+  <div class="ctr">
+    <div class="form-g">
+      <div class="form-info fade">
+        <span class="sec-tag">Product Quote</span>
+        <h2 class="sec-t">Quote on the<br><span style="color:var(--blue)">${esc(product)}</span></h2>
+        <p class="sec-sub">${esc(intro)}</p>
+        <div class="fperks">
+          <div class="fperk"><div class="fpd">✓</div>Free, no-obligation quote</div>
+          <div class="fperk"><div class="fpd">✓</div>Quote turnaround within 48 hours</div>
+          <div class="fperk"><div class="fpd">✓</div>Certified ${product.startsWith('VELUX')?'Velux':product.startsWith('Solatube')?'Solatube':'manufacturer'} installer</div>
+          <div class="fperk"><div class="fpd">✓</div>Industry-leading manufacturer warranties</div>
+        </div>
+        <div class="form-contacts">
+          <div class="fc-item"><div class="fc-ic">📞</div><div><div class="fc-l">Phone</div><a href="tel:0428219634" class="fc-v">0428 219 634</a></div></div>
+          <div class="fc-item"><div class="fc-ic">✉</div><div><div class="fc-l">Email</div><a href="mailto:admin@tintek.com.au" class="fc-v">admin@tintek.com.au</a></div></div>
+        </div>
+      </div>
+      <div class="qform fade" id="quote-form" data-product="${esc(product)}" data-mode="product">
+        <div class="qform-head">
+          <div class="qform-tag">⚡ Quote — ${esc(product)}</div>
+          <h3 class="qform-title">Request a Quote</h3>
+          <p class="qform-product-note">Enquiring about: <strong>${esc(product)}</strong></p>
+        </div>
+        <div class="psimple">
+          <p class="fsub" style="margin-bottom:18px">Fill in your details and we'll get back within 24 hours.</p>
+          <input type="text" class="finp" placeholder="Your name" id="fn" autocomplete="name" required>
+          <input type="tel" class="finp" placeholder="Phone number" id="fp" autocomplete="tel" required>
+          <input type="email" class="finp" placeholder="Email address" id="fe" autocomplete="email" required>
+          <input type="text" class="finp" placeholder="Suburb" id="fs" autocomplete="address-level2" required>
+          <textarea class="finp" placeholder="Anything else we should know? (optional)" id="fnotes" rows="3" style="resize:vertical;font-family:inherit"></textarea>
+          <input type="text" id="fhp" name="_honey" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" aria-hidden="true">
+          <button type="button" class="fn" onclick="subSimple(event)" style="width:100%;margin-top:6px">Request My Quote →</button>
+        </div>
+        <div class="psimple-success" style="display:none;text-align:center;padding:32px 0">
+          <div style="font-size:2.6rem;margin-bottom:12px">✅</div>
+          <h3 style="margin-bottom:8px;font-size:1.4rem">Thanks — we're on it!</h3>
+          <p class="fsub" style="margin:0;font-size:.95rem">We'll be in touch within 24 hours with your tailored quote on the ${esc(product)}.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>`;
+}
+
 function productHero(p, s) {
   const r = root(p.slug);
   const isVelux = s.parent === 'velux';
@@ -796,12 +849,9 @@ function buildProductPage(s) {
       body:`Our certified installers will measure your roof, recommend the right model, and give you a fixed-price quote — free, with no obligation.`,
       localForm:true
     }),
-    quoteForm(p,{
+    productQuoteForm(p,{
       product:s.h1,
-      heading:`Get a quote on the<br><span style="color:var(--blue)">${esc(s.h1)}</span>`,
-      intro:`Tell us about your roof and we'll come back with a fixed-price quote on the ${s.h1} — including measurement, supply, install, and warranty.`,
-      tag:`⚡ Quote — ${esc(s.h1)}`,
-      title:`Request a Quote — ${s.h1}`
+      intro:`Tell us a few details and we'll come back with a fixed-price quote on the ${s.h1} — supply, install, and warranty included. Free, no obligation.`
     }),
     relatedSkylights(p,s.parent,s.slug),
     partners(p),
