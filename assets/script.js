@@ -142,16 +142,18 @@ function sub(ev) {
 
   var payload = {
     _subject: 'New Quote Request — ' + n + ' (' + s + ')',
-    _template: 'table',
+    _template: 'box',
     _captcha: 'false',
     _replyto: e,
-    Name: n, Phone: p, Email: e, Suburb: s,
-    'Project Type': labels.s1[fd.s1] || fd.s1 || 'Not specified',
-    'Property Type': labels.s2[fd.s2] || fd.s2 || 'Not specified',
-    Urgency: labels.s3[fd.s3] || fd.s3 || 'Not specified',
-    Page: location.pathname + location.search,
-    'User Agent': navigator.userAgent,
-    'Submitted At': new Date().toISOString()
+    name: n,
+    phone: p,
+    email: e,
+    suburb: s,
+    project_type: labels.s1[fd.s1] || fd.s1 || 'Not specified',
+    property_type: labels.s2[fd.s2] || fd.s2 || 'Not specified',
+    urgency: labels.s3[fd.s3] || fd.s3 || 'Not specified',
+    page: location.pathname + location.search,
+    submitted_at: new Date().toISOString()
   };
 
   fetch('https://formsubmit.co/ajax/' + encodeURIComponent(FORM_EMAIL), {
