@@ -685,7 +685,11 @@ function buildServicePage(s) {
     reviewsSection(),
     s.faqs ? faqSection(s.faqs) : '',
     relatedServices(p, [s.slug]),
-    quoteForm(p),
+    productQuoteForm(p,{
+      topic: s.h1,
+      kind: 'service',
+      intro: `Tell us a few quick details about your ${s.shortName.toLowerCase()} and we'll come back with a fixed-price quote — free, no obligation, within 48 hours.`
+    }),
     partners(p),
     areasSection(p),
     footer(p),
@@ -724,25 +728,36 @@ function buildSkylightPage(s) {
   return p;
 }
 
-// Simple single-step quote form for product pages.
-// No wizard / project-type questions — the customer is on a specific product
-// page so the context is implicit. Just collect contact details.
+// Simple single-step quote form for product / service pages.
+// No wizard / project-type questions — the customer is on a specific page
+// so the context is implicit. Just collect contact details.
 function productQuoteForm(p, opts) {
   opts = opts || {};
-  const product = opts.product || '';
-  const intro = opts.intro || `Tell us a few details and we'll come back with a fixed-price quote on the ${product} — supply, install, and warranty included.`;
+  const topic = opts.topic || opts.product || '';        // product OR service name
+  const kind = opts.kind || 'product';                    // 'product' | 'service'
+  const isService = kind === 'service';
+  const tagLabel = isService ? 'Service Quote' : 'Product Quote';
+  const headingPrefix = isService ? 'Quote for' : 'Quote on the';
+  const introDefault = isService
+    ? `Tell us a few details and we'll come back with a fixed-price quote on ${topic} — fast, no-obligation.`
+    : `Tell us a few details and we'll come back with a fixed-price quote on the ${topic} — supply, install, and warranty included.`;
+  const intro = opts.intro || introDefault;
+  // "Certified X installer" perk only makes sense for known product brands
+  const installerPerk = topic.startsWith('VELUX') ? 'Certified Velux installer'
+    : topic.startsWith('Solatube') ? 'Certified Solatube installer'
+    : 'Fully QBCC licensed & insured';
   return `
 <section class="sec form-sec" id="quote">
   <div class="ctr">
     <div class="form-g">
       <div class="form-info fade">
-        <span class="sec-tag">Product Quote</span>
-        <h2 class="sec-t">Quote on the<br><span style="color:var(--blue)">${esc(product)}</span></h2>
+        <span class="sec-tag">${tagLabel}</span>
+        <h2 class="sec-t">${headingPrefix}<br><span style="color:var(--blue)">${esc(topic)}</span></h2>
         <p class="sec-sub">${esc(intro)}</p>
         <div class="fperks">
           <div class="fperk"><div class="fpd">✓</div>Free, no-obligation quote</div>
           <div class="fperk"><div class="fpd">✓</div>Quote turnaround within 48 hours</div>
-          <div class="fperk"><div class="fpd">✓</div>Certified ${product.startsWith('VELUX')?'Velux':product.startsWith('Solatube')?'Solatube':'manufacturer'} installer</div>
+          <div class="fperk"><div class="fpd">✓</div>${esc(installerPerk)}</div>
           <div class="fperk"><div class="fpd">✓</div>Industry-leading manufacturer warranties</div>
         </div>
         <div class="form-contacts">
@@ -750,11 +765,11 @@ function productQuoteForm(p, opts) {
           <div class="fc-item"><div class="fc-ic">✉</div><div><div class="fc-l">Email</div><a href="mailto:admin@tintek.com.au" class="fc-v">admin@tintek.com.au</a></div></div>
         </div>
       </div>
-      <div class="qform fade" id="quote-form" data-product="${esc(product)}" data-mode="product">
+      <div class="qform fade" id="quote-form" data-topic="${esc(topic)}" data-kind="${kind}">
         <div class="qform-head">
-          <div class="qform-tag">⚡ Quote — ${esc(product)}</div>
+          <div class="qform-tag">⚡ ${isService?'Quote':'Quote'} — ${esc(topic)}</div>
           <h3 class="qform-title">Request a Quote</h3>
-          <p class="qform-product-note">Enquiring about: <strong>${esc(product)}</strong></p>
+          <p class="qform-product-note">Enquiring about: <strong>${esc(topic)}</strong></p>
         </div>
         <div class="psimple">
           <p class="fsub" style="margin-bottom:18px">Fill in your details and we'll get back within 24 hours.</p>
@@ -769,7 +784,7 @@ function productQuoteForm(p, opts) {
         <div class="psimple-success" style="display:none;text-align:center;padding:32px 0">
           <div style="font-size:2.6rem;margin-bottom:12px">✅</div>
           <h3 style="margin-bottom:8px;font-size:1.4rem">Thanks — we're on it!</h3>
-          <p class="fsub" style="margin:0;font-size:.95rem">We'll be in touch within 24 hours with your tailored quote on the ${esc(product)}.</p>
+          <p class="fsub" style="margin:0;font-size:.95rem">We'll be in touch within 24 hours with your tailored quote${topic?' on '+esc(isService?topic:'the '+topic):''}.</p>
         </div>
       </div>
     </div>
@@ -858,7 +873,8 @@ function buildProductPage(s) {
       localForm:true
     }),
     productQuoteForm(p,{
-      product:s.h1,
+      topic:s.h1,
+      kind:'product',
       intro:`Tell us a few details and we'll come back with a fixed-price quote on the ${s.h1} — supply, install, and warranty included. Free, no obligation.`
     }),
     relatedSkylights(p,s.parent,s.slug),
@@ -981,7 +997,11 @@ function buildRoofingTypePage(s) {
     gallery(p),
     reviewsSection(),
     s.faqs ? faqSection(s.faqs) : '',
-    quoteForm(p),
+    productQuoteForm(p,{
+      topic: s.h1,
+      kind: 'service',
+      intro: `Tell us about your ${s.shortName.toLowerCase()} project and we'll come back with a fixed-price quote — free, no obligation, within 48 hours.`
+    }),
     partners(p),
     areasSection(p),
     footer(p),

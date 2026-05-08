@@ -267,15 +267,18 @@ function subSimple(ev) {
   var btn = (ev && ev.target) || document.querySelector('.psimple .fn');
   if (btn) { btn.disabled = true; btn.textContent = 'Sending…'; }
 
-  // Read product context from form
+  // Read context from form (works for both product pages and service pages)
   var qformEl = document.getElementById('quote-form');
-  var product = (qformEl && qformEl.dataset && qformEl.dataset.product) || 'Product enquiry';
+  var topic = (qformEl && qformEl.dataset && (qformEl.dataset.topic || qformEl.dataset.product)) || 'General enquiry';
+  var kind = (qformEl && qformEl.dataset && qformEl.dataset.kind) || 'product';
+  var label = kind === 'service' ? 'SERVICE QUOTE' : 'PRODUCT QUOTE';
+  var fieldLabel = kind === 'service' ? 'Service' : 'Product';
 
   var lines = [
-    '*** PRODUCT QUOTE: ' + product + ' ***',
+    '*** ' + label + ': ' + topic + ' ***',
     'Customer: ' + n + ' (' + s + ')',
     '',
-    'Product: ' + product,
+    fieldLabel + ': ' + topic,
     'Suburb: ' + s
   ];
   if (notes) {
@@ -310,8 +313,8 @@ function subSimple(ev) {
         var success = document.querySelector('.psimple-success');
         if (formBox) formBox.style.display = 'none';
         if (success) success.style.display = 'block';
-        if (typeof gtag === 'function') gtag('event', 'generate_lead', { value: 1, currency: 'AUD', product: product });
-        if (window.dataLayer) window.dataLayer.push({ event: 'product_quote_submitted', product: product, suburb: s });
+        if (typeof gtag === 'function') gtag('event', 'generate_lead', { value: 1, currency: 'AUD', topic: topic, kind: kind });
+        if (window.dataLayer) window.dataLayer.push({ event: kind + '_quote_submitted', topic: topic, suburb: s });
       } else {
         throw new Error((d && d.message) || 'Unknown response');
       }
