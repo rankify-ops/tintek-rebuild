@@ -5,10 +5,8 @@
 // =====================================================
 
 // === CONFIG ===
-// Where quote requests get emailed to.
-// First submission triggers an activation email — click the link in it
-// and every future submission arrives instantly.
-var FORM_EMAIL = 'admin@tintek.com.au';
+var FORM_ACCESS_KEY = 'bcb81f47-90a1-4bc1-887f-c7230a81a5ec';
+var FORM_CC = 'tflood@rankify.com.au';
 
 // =============================================================
 
@@ -187,18 +185,23 @@ function sub(ev) {
   lines.push('Reply directly to this customer at: ' + e);
   var msg = lines.join('\n');
 
-  // ⚠️ Stick to exactly these fields. FormSubmit's free tier silently breaks
-  // body rendering if you add any underscored config (_subject, _captcha, _replyto)
-  // to a JSON/AJAX submission. Keep it bare.
   var payload = {
-    _template: 'basic',
+    access_key: FORM_ACCESS_KEY,
+    cc: FORM_CC,
+    subject: 'Website enquiry — ' + (productCtx || 'Quote Request'),
+    replyto: e,
     name: n,
     email: e,
     phone: p,
-    message: msg
+    'Project Type': projectType,
+    'Property Type': propertyType,
+    'Urgency': urgency,
+    'Suburb': s,
+    'Source Page': location.href
   };
+  if (productCtx) payload['Product'] = productCtx;
 
-  fetch('https://formsubmit.co/ajax/' + encodeURIComponent(FORM_EMAIL), {
+  fetch('https://api.web3forms.com/submit', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify(payload)
@@ -294,14 +297,20 @@ function subSimple(ev) {
   lines.push('Reply directly to this customer at: ' + e);
 
   var payload = {
-    _template: 'basic',
+    access_key: FORM_ACCESS_KEY,
+    cc: FORM_CC,
+    subject: 'Website enquiry — ' + topic,
+    replyto: e,
     name: n,
     email: e,
     phone: p,
-    message: lines.join('\n')
+    'Suburb': s,
+    'Source Page': location.href
   };
+  if (notes) payload['Notes'] = notes;
+  payload[fieldLabel] = topic;
 
-  fetch('https://formsubmit.co/ajax/' + encodeURIComponent(FORM_EMAIL), {
+  fetch('https://api.web3forms.com/submit', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body: JSON.stringify(payload)
