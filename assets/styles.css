@@ -364,7 +364,6 @@ img{max-width:100%;display:block}
   .nav-l,.nav-ph{display:none}.mob-tog{display:block}
   .hero-cards{grid-template-columns:repeat(2,1fr)}
   .hero-trust{display:none}
-  .hero-inner{padding:60px 0 80px}
   .benefits{margin-top:-32px}
   .benefits-grid{grid-template-columns:repeat(2,1fr)}
   .ben-item{border-right:none;border-bottom:1px solid var(--g100)}
