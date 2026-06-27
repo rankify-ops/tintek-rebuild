@@ -93,8 +93,9 @@ function head(p) {
 <meta name="twitter:image" content="${ogImg}">
 <meta name="geo.region" content="AU-QLD"><meta name="geo.placename" content="Gold Coast">
 <meta name="theme-color" content="#0B2E60">
-<link rel="icon" href="${r}images/Asset-1.png">
-<link rel="apple-touch-icon" href="${r}images/Asset-1.png">
+<link rel="icon" type="image/png" sizes="32x32" href="${r}images/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="${r}images/favicon.png">
+<link rel="apple-touch-icon" href="${r}images/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="${r}assets/styles.css">
