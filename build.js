@@ -445,7 +445,6 @@ function footer(p) {
       <div class="foot-brand">
         <a href="${r || '/'}" class="logo"><img src="${r}images/Asset-1.png" alt="Tintek Roofing & Cladding"></a>
         <p>Our strong reputation is built on exceptional products, outstanding service, and competitive pricing. We stand behind the quality of our craftsmanship.</p>
-        <div class="foot-soc"><a href="#" aria-label="Facebook">f</a><a href="#" aria-label="Instagram">ig</a><a href="#" aria-label="Google">G</a></div>
       </div>
       <div><h4>Quick Links</h4><ul class="foot-l">
         <li><a href="${r || '/'}">Home</a></li>
